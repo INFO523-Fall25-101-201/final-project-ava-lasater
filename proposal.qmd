@@ -7,12 +7,12 @@ author:
       - name: "College of Information Science, University of Arizona"
 description: "This project will analyze data from the U.S. Department of Education’s College Scorecard 
 (https://collegescorecard.ed.gov/data/) to explore how institutional and financial factors influence student outcomes 
-across U.S. colleges and universities. Specifically, it will investigate the relationship between tuition costs, 
-scholarship or grant aid, and key outcome metrics such as retention rates and post-graduation earnings. The working 
-hypothesis is that higher tuition combined with limited scholarship support is associated with lower student retention 
-due to increased financial strain, while institutions with higher tuition may exhibit higher post-graduation earnings due 
-to factors such as institutional prestige and resource availability. The financial burden associated with colllege is 
-becoming increasingly heavy for young people, and I am very curious to see what the relationship with student outcomes. "
+across U.S. colleges and universities. Specifically, it will investigate the relationship between cost of attendance and 
+key outcome metrics such as retention rates and post-graduation earnings. The working hypothesis is that higher tuition 
+combined with limited scholarship support is associated with lower student retention due to increased financial strain, 
+while institutions with higher tuition may exhibit higher post-graduation earnings due to factors such as institutional 
+prestige and resource availability. The financial burden associated with colllege is becoming increasingly heavy for young 
+people, and I am very curious to see what the relationship with student outcomes. "
 format:
   html:
     code-tools: true
@@ -51,11 +51,16 @@ and earnings), helping to uncover whether affordability or institutional prestig
 
 The two questions you want to answer.
 
-1. How does average grant or scholarship aid affect student retention rates at institutions with different tuition levels?
+1. How does average cost of attendance aid affects student retention rates at institutions with different tuition levels?
 
 2. Is there a relationship between institutional tuition and post-graduation earnings, and does this differ by institution 
 type (public, private nonprofit, for-profit)?
 
 ## Analysis plan
 
--   A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
+-   A plan for answering each of the questions including the variables involved, variables to be created (if any), external 
+data to be merged in (if any).
+
+To answer the first question, I will be looking at the average net prices and retention. There are multiple columns for each of these
+factors in the dataset. Next, there are several breakdowns concerning the percentage of student working after graduation. I will use this 
+data and compare the type of institution and the tuition to see if there is a relationship. 
