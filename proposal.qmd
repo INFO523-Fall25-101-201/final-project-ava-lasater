@@ -78,7 +78,9 @@ data to be merged in (if any).
 
 To answer the first question, I will be looking at the average net prices and retention. There are multiple columns for each of these
 factors in the dataset. Next, there are several breakdowns concerning the percentage of student working after graduation. I will use this 
-data and compare the type of institution and the tuition to see if there is a relationship. 
+data and compare the type of institution and the tuition to see if there is a relationship. I plan on doing an EDA and determining which 
+factors specifically I want to focus on, then I will perform a linear regression if that makes sense for the data, or other forms of 
+quantitative analysis in order to determine a relationship.
 
 
 
