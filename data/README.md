@@ -44,6 +44,38 @@
 ## Data Types:
 
 -   **INSTNM**: string
+-   **STABBR**: string
+-   **HIGHDEG**: integer
+        0 Non-degree-granting
+        1 Certificate degree
+        2 Associate degree
+        3 Bachelor's degree
+        4 Graduate degree
+-   **PREDEG**: integer
+        0 Not classified
+        1 Predominantly certificate-degree granting
+        2 Predominantly associate's-degree granting
+        3 Predominantly bachelor's-degree granting
+        4 Entirely graduate-degree granting
+-   **CONTROL**: integer
+-   **COSTT4_A**: integer
+-   **TUITIONFEE_IN**: integer
+-   **TUITIONFEE_OUT**: integer
+-   **TUITFTE**: integer
+-   **C150_4**: float
+-   **C150_4_POOLED**: float
+-   **RET_FT4**: float
+-   **COMP_ORIG_YR4_RT**: float
+-   **COMP_ORIG_YR6_RT**: float
+-   **RPY_1YR_RT**: float
+-   **DEP_INC_AVG**: integer
+-   **GRAD_DEBT_MDN**: float
+-   **COUNT_WNE_P10**: integer
+-   **MD_EARN_WNE_P10**: integer
+-   **COUNT_WNE_INC1_P10**: integer
+-   **COUNT_WNE_P6**: integer
+-   **MD_EARN_WNE_P6**: integer
+-   **COUNT_WNE_INC1_P6**: integer
 
 
 
