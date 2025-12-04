@@ -40,6 +40,9 @@
 -   **COUNT_WNE_P6**: Mean earnings of students working and not enrolled 6 years after entry
 -   **MD_EARN_WNE_P6**: Median earnings of students working and not enrolled 6 years after entry
 -   **COUNT_WNE_INC1_P6**: Number of students working and not enrolled 6 years after entry in the lowest income tercile $0-$30,000
+-   **MDCOMP_PD**: Median completion rate amongst insitutions with the same predominant degree category 
+-   **MDCOST_PD**: Median average net price amongst insitituions with the same predominant degree category
+
 
 ## Data Types:
 
@@ -76,6 +79,7 @@
 -   **COUNT_WNE_P6**: integer
 -   **MD_EARN_WNE_P6**: integer
 -   **COUNT_WNE_INC1_P6**: integer
-
+-   **MDCOMP_PD**: float
+-   **MDCOST_PD**: float
 
 
