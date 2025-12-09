@@ -52,9 +52,15 @@ df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cl
 
 ## Overview
 
-- Research question
-- Why this matters
-- Very short summary of findings
+- **Goal:** Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.
+- **Data:** U.S. Department of Education **College Scorecard** (bachelor’s-degree-granting institutions).
+- **Methods:**
+  - Exploratory data analysis
+  - Linear & Ridge regression
+  - Logistic regression & Random Forest
+  - Feature selection & permutation importance
+- **Key focus:** Which institutional features most strongly predict higher earnings 10 years after enrollment?
+
 
 ## Data
 - Source
