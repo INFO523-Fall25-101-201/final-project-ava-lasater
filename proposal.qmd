@@ -1,5 +1,5 @@
 ---
-title: "The Impact of Tuition and Financial Aid on Student Retention and Post-Graduation Outcomes"
+title: "Impact of Tuition and Financial Aid on Student Retention and Post-Graduation Outcomes"
 subtitle: "Proposal"
 author: 
   - name: "Ava Lasater"
