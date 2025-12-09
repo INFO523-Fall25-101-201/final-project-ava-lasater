@@ -45,6 +45,7 @@ plt.rcParams['figure.figsize'] = (6, 6 * 0.618)
 #| include: false
 # Load data in Python
 college_data_selected = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Preprocessed.csv')
+college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_RegressionData.csv')
 
 ```
 
@@ -239,6 +240,63 @@ plt.show()
     - More stable coefficients in the presence of collinearity.
 - **Limitations:**
   - Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.
+
+---
+
+## Linear Regression Results
+
+```{.python code-line-numbers="18-50"}
+y = college_regression['MD_EARN_WNE_P10']
+# X = all columns except the target
+X = college_regression.drop(columns=['MD_EARN_WNE_P10'])
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+# Adding a constant for OLS
+X_train_with_const = sm.add_constant(X_train)
+X_test_with_const = sm.add_constant(X_test)
+
+# Fitting the OLS model
+model = sm.OLS(y_train, X_train_with_const).fit()
+
+# Making predictions
+y_pred = model.predict(X_test_with_const)
+
+# Evaluating the model
+# creating a residual plot
+X_test_with_const = sm.add_constant(X_test)
+predictions = model.predict(X_test_with_const)
+predictions = pd.to_numeric(predictions, errors='coerce')
+residuals = y_test - predictions
+residuals = pd.to_numeric(residuals, errors='coerce').fillna(0)
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 12))
+
+sns.residplot(x=predictions, y=residuals, lowess=False, ax=axes[0,0], color = 'royalblue')
+axes[0,0].set_xlabel('Predicted Values')
+axes[0,0].set_ylabel('Residuals')
+axes[0,0].set_title('Residuals vs Fitted')
+
+# regression fit
+axes[0,1].scatter(predictions, y_test, label='Data', color = 'royalblue')
+axes[0,1].plot(y_test, y_test, color='red', label='Ideal Fit')
+axes[0,1].set_xlabel('Predicted Days Lasted')
+axes[0,1].set_ylabel('Actual Days Lasted')
+axes[0,1].set_title('Predicted vs Actual')
+axes[0,1].legend()
+
+# Q-Q plot
+sm.qqplot(residuals, line='45', fit=True, ax=axes[1,0], markerfacecolor='royalblue', markeredgecolor='royalblue')
+axes[1,0].set_title('Q-Q Plot of Residuals')
+
+# residual distribution 
+sns.histplot(residuals, ax=axes[1,1], color = 'royalblue')
+axes[1,1].set_title('Residual Distribution')
+axes[1,1].set_xlabel('Residuals')
+
+plt.tight_layout()
+plt.show()
+```
 
 ---
 
