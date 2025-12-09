@@ -48,13 +48,40 @@ df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cl
 
 ```
 
-# Using Quarto for presentations
+# Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics
 
-## Quarto
+## Overview
 
--   The presentation is created using the Quarto CLI
+- Research question
+- Why this matters
+- Very short summary of findings
 
--   `##` sets the start of a new slide
+## Data
+- Source
+- Sample size
+- Key variables
+- Cleaning and filtering
+
+## Methods
+- Models
+- Train/test split 
+- Key choices
+
+## Results
+- Figures
+- A table or key summary points
+
+## Results of Modeling
+- Main model output
+- Interpretation in plain language
+
+## Limitations
+- Data limitations
+- Method limitations
+
+## Takeaways & Next Steps
+- Takeaways
+- Future work or open questions
 
 ## Layouts
 
