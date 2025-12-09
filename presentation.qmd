@@ -61,137 +61,211 @@ df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cl
   - Feature selection & permutation importance
 - **Key focus:** Which institutional features most strongly predict higher earnings 10 years after enrollment?
 
+---
 
-## Data
-- Source
-- Sample size
-- Key variables
-- Cleaning and filtering
+## Research Questions
 
-## Methods
-- Models
-- Train/test split 
-- Key choices
+- **RQ1.** How do tuition and financial burden relate to median earnings 10 years after enrollment?
+- **RQ2.** How do institutional characteristics (region, locale, control, size) and student composition (Pell share) relate to earnings and completion?
+- **RQ3.** Can institutional features reliably classify colleges as **high-earning vs. low-earning**?
+- **RQ4.** Which features are most important for prediction across linear and machine-learning models?
 
-## Results
-- Figures
-- A table or key summary points
+---
 
-## Results of Modeling
-- Main model output
-- Interpretation in plain language
+## Data & Preprocessing
 
-## Limitations
-- Data limitations
-- Method limitations
+- **Source:** U.S. College Scorecard (institution-level data).
+- **Scope:**
+  - Filtered to institutions that **primarily award bachelor’s degrees**.
+  - Focused on recent cohorts with available 10-year earnings.
+- **Key variable groups:**
+  - **Cost:** in-state & out-of-state tuition, median debt.
+  - **Institutional:** enrollment (UGDS), control, region, locale.
+  - **Outcomes:** retention, 4-year completion, 10-year median earnings.
+- **Missing data:**
+  - Dropped columns with severe missingness (e.g., detailed demographics).
+  - Dropped rows with missing core cost/outcome variables rather than imputing.
 
-## Takeaways & Next Steps
-- Takeaways
-- Future work or open questions
+---
 
-## Layouts
+## Sample Structure Check
 
-You can use plain text
+- Compared **original vs. cleaned** distributions for:
+  - State, region, locale, and control type.
+- **Result:** Filtering and missing-data removal:
+  - Did **not** wipe out any region or control group.
+  - Preserved a broad mix of public and private institutions across the U.S.
+- Interpretation: The cleaned dataset still represents a diverse institutional landscape.
 
-::: columns
-::: {.column width="40%"}
--   or bullet points[^1]
-:::
+---
 
-::: {.column width="60%"}
-or in two columns
-:::
-:::
+## Exploratory Data Analysis
 
-[^1]: And add footnotes
+- **Cost:**
+  - In-state and out-of-state tuition are **right-skewed**.
+  - Most schools between ≈ \$10K–\$40K; a small number of very expensive institutions.
+- **Size (UGDS):**
+  - Strong right skew; most enroll 1K–6K students.
+  - A few very large institutions (e.g., large online providers).
+- **Outcomes:**
+  - Retention and completion rates are bounded [0,1] and cluster toward higher values.
+  - Identified and removed institutions with impossible patterns (e.g., 0% completion at all time horizons, 0% retention with missing context).
+- **Earnings:**
+  - 10-year earnings percentiles are skewed; **median earnings** used as a stable target.
 
--   like
+---
 
--   this
+## Correlation Patterns
 
-## Code
+- Tuition has **only weak to moderate correlation** with earnings.
+- Retention and completion rates show **moderate positive** correlations with earnings.
+- Pell Grant share (**PCTPELL**) shows **negative** correlations with both earnings and completion:
+  - Institutions serving more low-income students tend to have lower median earnings.
+- Takeaway: **Institutional performance and student composition** are more strongly related to outcomes than tuition alone.
 
-```{python}
-from sklearn.linear_model import LinearRegression
-import statsmodels.api as sm
-import pandas as pd
+---
 
-# Fit a linear regression model
-X = mtcars[['speed']]
-y = mtcars['mpg']
-model = LinearRegression().fit(X, y)
+## Regression Setup
 
-# Summary of the model
-X2 = sm.add_constant(X)
-est = sm.OLS(y, X2)
-est2 = est.fit()
-print(est2.summary())
-```
+- **Target:** Median earnings 10 years after enrollment (**MD_EARN_WNE_P10**).
+- **Predictors:**
+  - Cost: TUITIONFEE_IN, TUITIONFEE_OUT, median debt.
+  - Institution: UGDS, region dummies, locale dummies, control dummies.
+  - Outcomes: retention and completion rates.
+- **Preprocessing:**
+  - Log-transform skewed variables where appropriate.
+  - Standardize continuous predictors.
+  - One-hot encode categorical variables (region, locale, control).
 
-## Plots
+---
 
-```{python}
-penguins['species'] = penguins['species'].apply(lambda x: "Adelie" if x == "Adelie" else "Other")
-sns.scatterplot(data=penguins, x='flipper_length_mm', y='body_mass_g', hue='species')
-plt.show()
-```
+## Linear & Ridge Regression Results
 
-## Plot and text
+- **Linear model (OLS):**
+  - Adjusted R² ≈ **0.57** — institutional features explain ~57% of variance in earnings.
+  - Strong positive coefficients: in-state tuition, retention, 4-year completion.
+  - Strong negative coefficients: median debt, Pell share, several lower-wage regions.
+- **Multicollinearity:**
+  - High VIF for tuition variables → removed out-of-state tuition for OLS.
+  - Ridge regression refit with both tuition variables:
+    - Similar R² (~0.49 on test data).
+    - More stable coefficients in the presence of collinearity.
+- **Limitations:**
+  - Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.
 
-::: columns
-::: {.column width="50%"}
--   Some text
+---
 
--   goes here
-:::
+## Feature Selection for Classification
 
-::: {.column width="50%"}
-```{python}
-#| warning: false
-#| fig.width: 5.5
-fig, ax = plt.subplots(figsize=(5.5, 5.5 * 0.618))
-sns.boxplot(data=penguins, x='bill_length_mm', y='species', hue='species', ax=ax)
-plt.show()
-```
-:::
-:::
+- **Outcome for classification:** High-earning vs. low-earning institution  
+  (above vs. below sample median earnings).
+- **Feature selection strategy:**
+  - **SelectKBest** (f_classif) to identify top 15 statistically relevant predictors.
+  - **Random Forest feature importance** to capture nonlinear effects and interactions.
+  - Final feature set = **union** of the top features from both methods.
+- **Self-taught component:**
+  - Added **permutation importance** to quantify how much model performance drops when each feature is shuffled.
 
-# A new section...
+---
 
-## Tables
+## Logistic Regression Classification
 
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
+- **Model:** Logistic regression with standardized predictors.
+- **Performance:**
+  - Accuracy ≈ **0.77**
+  - Precision ≈ **0.78**
+  - Recall ≈ **0.77**
+  - F1 ≈ **0.77**
+  - 5-fold CV F1 ≈ **0.80**
+- **Interpretation:**
+  - A simple linear decision boundary separates high- and low-earning institutions reasonably well.
+  - Coefficient patterns mirror regression results: retention, completion, tuition, and Pell share are key drivers.
 
-```{python}
-penguins.head().to_html()
-```
+---
 
-## Images
+## Random Forest Classification
 
-![Image credit: Danielle Navarro, Percolate.](images/watercolour_sys02_img34_teacup-ocean.png){fig-align="center" width="500"}
+- **Model:** Random Forest classifier using the selected feature set.
+- **Performance:**
+  - Accuracy ≈ **0.78**
+  - Precision, Recall, F1 ≈ **0.78**
+  - 5-fold CV F1 ≈ **0.82**
+- **Insights:**
+  - Slightly better predictive performance than logistic regression.
+  - Captures nonlinear relationships and interactions among:
+    - Enrollment size (UGDS)
+    - Retention and completion
+    - Tuition levels
+    - Pell share
+    - Certain regions
 
-## Math Expressions {.smaller}
+---
 
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. \$\\alpha+\\beta\$ renders $\alpha + \beta$. You can use the display style with double dollar signs:
+## Permutation Importance (Random Forest)
 
-```         
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
+- **Top predictors for high-earning institutions:**
+  - **UGDS** (student body size)
+  - **RET_FT4** (first-year retention)
+  - **TUITIONFEE_OUT** and **TUITIONFEE_IN**
+  - **PCTPELL** (share of Pell recipients)
+  - Regional indicators (e.g., Southeast, Mid East)
+- **Low-impact features:**
+  - Many fine-grained locale categories
+  - Control type contributes relatively little once other factors are included.
+- **Takeaway:** Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting.
 
-$$
-\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i
-$$
+---
 
-Limitations:
+## Calibration: Probabilities vs. Accuracy
 
-1.  The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
+- **Calibration curve comparison:**
+  - **Logistic regression:**
+    - Probabilities closely follow the 45° line → **well-calibrated**.
+    - Predicted probabilities match observed frequencies.
+  - **Random Forest:**
+    - Produces extreme probabilities (mostly near 0 or 1).
+    - Overconfident and **poorly calibrated** without post-processing.
+- **Implication:**
+  - Random Forest is better for **classification accuracy**.
+  - Logistic regression is better when **probability estimates** are used for decision-making or interpretation.
 
-2.  There should not be spaces after the opening `$` or before the closing `$`.
+---
 
-# Wrap up
+## Key Findings
 
-## Feeling adventurous?
+- Higher tuition is associated with higher earnings, but:
+  - Effects are modest and intertwined with other institutional features.
+- Retention and completion rates are **strong, consistent predictors** of long-term earnings.
+- Institutions with higher **Pell Grant shares** tend to have lower earnings, reflecting underlying socioeconomic differences.
+- Model performance:
+  - Linear and Ridge regression explain ~50–57% of earnings variation.
+  - Classification models distinguish high- vs low-earning institutions with F1 ≈ **0.77–0.82**.
+- Student outcomes and composition matter at least as much as sticker price.
 
--   You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
+---
 
--   But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.
+## Limitations & Future Work
+
+- **Data limitations:**
+  - Institution-level aggregates; no student-level or major-level detail.
+  - Missing data and reporting differences across institutions.
+- **No causal claims:**
+  - Observational, cross-sectional analysis; cannot separate institution effect from selection bias.
+- **Future directions:**
+  - Incorporate program/major mix and selectivity.
+  - Explore causal methods or matching designs.
+  - Examine changes over time (longitudinal trends).
+
+---
+
+## Takeaways
+
+- Tuition alone is an incomplete indicator of value.
+- **Academic success metrics** (retention & completion) and **student demographics** are central to explaining earnings.
+- Machine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers.
+- For policy, student advising, or institutional benchmarking, interpreting **both cost and outcomes** together is essential.
+
+---
+
+
+
