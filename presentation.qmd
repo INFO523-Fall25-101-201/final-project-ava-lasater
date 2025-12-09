@@ -86,6 +86,29 @@ df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cl
 
 ---
 
+## Distribution of Institutions by State
+
+```{python}
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+fig, axes = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
+
+axes[0].hist(college_data_selected['ST_FIPS'], bins=np.arange(1, 79) - 0.5,
+             edgecolor='black', color='steelblue')
+axes[0].set_title('Original Distribution')
+
+axes[1].hist(college_final['ST_FIPS'], bins=np.arange(1, 79) - 0.5,
+             edgecolor='black', color='indianred')
+axes[1].set_title('Cleaned Distribution')
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
 ## Sample Structure Check
 
 - Compared **original vs. cleaned** distributions for:
