@@ -1,7 +1,8 @@
 {
-  "hash": "0e6b82ab6a634a8b8dc925668c0f975c",
+  "hash": "cf7fa1c26d66a2c1b0070acd8d4d8d51",
   "result": {
-    "markdown": "---\ntitle: Project title\nsubtitle: INFO 523 - Project Final\nauthor: Team name\nformat: html\neditor: visual\n---\n\n## Abstract\n\nAdd project abstract here.\n\n",
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Impact of Tuition and Financial Aid on Student Retention and Post-Graduation Outcomes\"\nsubtitle: \"INFO 523 - Final Project\"\nauthor: \n  - name: \"Ava Lasater\"\n    affiliations:\n      - name: \"College of Information Science, University of Arizona\"\ndescription: \"Project description\"\nformat:\n   html:\n    code-tools: true\n    code-overflow: wrap\n    embed-resources: true\neditor: visual\nexecute:\n  warning: false\n  echo: false\njupyter: python3\n---\n\n## Abstract\n\nThis project investigates how tuition, financial aid indicators, and institutional characteristics relate to student retention and post-graduation earnings \nusing the U.S. College Scorecard dataset. After filtering the data to bachelor’s-degree-granting institutions and performing extensive preprocessing, exploratory \nanalysis revealed substantial variation in cost, student composition, and outcomes across institutions. Linear and Ridge regression models were used to estimate \nrelationships with median earnings ten years after enrollment, while logistic regression and random forest classifiers predicted whether an institution fell above \nthe national median earnings level. Results show that retention, completion rates, tuition, institutional size, and Pell Grant share are among the strongest predictors \nof outcomes. These findings highlight the combined influence of cost, socioeconomic composition, and institutional performance on long-term student success.\n\n",
     "supporting": [
       "index_files"
     ],

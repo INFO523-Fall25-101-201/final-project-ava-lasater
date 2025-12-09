@@ -38,7 +38,6 @@ import numpy as np
 #| label: load-dataset
 #| message: false
 
-data = pd.read_csv("Most-Recent-Cohorts-Institution)
 
 
 ```

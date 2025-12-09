@@ -48,8 +48,6 @@ df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cl
 
 ```
 
-# Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics
-
 ## Overview
 
 - **Goal:** Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.
