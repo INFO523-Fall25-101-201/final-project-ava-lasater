@@ -1,8 +1,8 @@
 ---
-title: "Project Title"
+title: "Impact of Tuition and Financial Aid on Student Retention and Post-Graduation Outcomes"
 subtitle: "INFO 523 - Final Project"
 author: 
-  - name: "Team name - Team member 1, Team member 2,..."
+  - name: "Ava Lasater"
     affiliations:
       - name: "College of Information Science, University of Arizona"
 description: "Project description"
@@ -20,4 +20,9 @@ jupyter: python3
 
 ## Abstract
 
-Add project abstract here.
+This project investigates how tuition, financial aid indicators, and institutional characteristics relate to student retention and post-graduation earnings 
+using the U.S. College Scorecard dataset. After filtering the data to bachelor’s-degree-granting institutions and performing extensive preprocessing, exploratory 
+analysis revealed substantial variation in cost, student composition, and outcomes across institutions. Linear and Ridge regression models were used to estimate 
+relationships with median earnings ten years after enrollment, while logistic regression and random forest classifiers predicted whether an institution fell above 
+the national median earnings level. Results show that retention, completion rates, tuition, institutional size, and Pell Grant share are among the strongest predictors 
+of outcomes. These findings highlight the combined influence of cost, socioeconomic composition, and institutional performance on long-term student success.
