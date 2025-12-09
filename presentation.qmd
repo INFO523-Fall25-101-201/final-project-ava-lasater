@@ -44,7 +44,7 @@ plt.rcParams['figure.figsize'] = (6, 6 * 0.618)
 #| label: load-data
 #| include: false
 # Load data in Python
-df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
+college_data_selected = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Preprocessed.csv')
 
 ```
 
@@ -84,28 +84,6 @@ df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cl
   - Dropped columns with severe missingness (e.g., detailed demographics).
   - Dropped rows with missing core cost/outcome variables rather than imputing.
 
----
-
-## Distribution of Institutions by State
-
-```{python}
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-
-fig, axes = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
-
-axes[0].hist(college_data_selected['ST_FIPS'], bins=np.arange(1, 79) - 0.5,
-             edgecolor='black', color='steelblue')
-axes[0].set_title('Original Distribution')
-
-axes[1].hist(college_final['ST_FIPS'], bins=np.arange(1, 79) - 0.5,
-             edgecolor='black', color='indianred')
-axes[1].set_title('Cleaned Distribution')
-
-plt.tight_layout()
-plt.show()
-```
 
 ---
 
@@ -118,7 +96,78 @@ plt.show()
   - Preserved a broad mix of public and private institutions across the U.S.
 - Interpretation: The cleaned dataset still represents a diverse institutional landscape.
 
+
 ---
+
+## Distribution of Institutions by Region
+
+```{python}
+fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+# orginial distribution
+axes[0].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5,
+             edgecolor='black', color='steelblue')
+axes[0].set_title('Distribution of Institutions by Region (Original Data)')
+axes[0].set_ylabel('Number of Institutions')
+# final distribution
+axes[1].hist(college_final['REGION'], bins=np.arange(1, 10)-0.5,
+             edgecolor='black', color='indianred')
+axes[1].set_title('Distribution of Institutions by Region (Cleaned Data)')
+axes[1].set_xlabel('Region Code')
+axes[1].set_ylabel('Number of Institutions')
+axes[1].set_xticks(range(1, 10))
+plt.tight_layout()
+plt.show()
+
+```
+
+---
+
+## Distribution of Institutions by Locale
+
+```{python}
+fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+# orginial distribution
+axes[0].hist(college_data_selected['LOCALE'], bins=np.arange(11, 44)-0.5,
+             edgecolor='black', color='steelblue')
+axes[0].set_title('Distribution of Institutions by Locale (Original Data)')
+axes[0].set_ylabel('Number of Institutions')
+# final distribution
+axes[1].hist(college_final['LOCALE'], bins=np.arange(11, 44)-0.5,
+             edgecolor='black', color='indianred')
+axes[1].set_title('Distribution of Institutions by Locale (Cleaned Data)')
+axes[1].set_xlabel('Locale Code')
+axes[1].set_ylabel('Number of Institutions')
+axes[1].set_xticks(range(11, 44))
+plt.tight_layout()
+plt.show()
+
+```
+
+---
+
+## Distribution of Institutions by Control
+
+```{python}
+fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+# orginial distribution
+axes[0].hist(college_data_selected['CONTROL'], bins=np.arange(1, 4)-0.5,
+             edgecolor='black', color='steelblue')
+axes[0].set_title('Distribution of Institutions by Control (Original Data)')
+axes[0].set_ylabel('Number of Institutions')
+# final distribution
+axes[1].hist(college_final['CONTROL'], bins=np.arange(1, 4)-0.5,
+             edgecolor='black', color='indianred')
+axes[1].set_title('Distribution of Institutions by Control (Cleaned Data)')
+axes[1].set_xlabel('Control of Institution (1=Public, 2=Private Non-Profit, 3=Private For-Profit)')
+axes[1].set_ylabel('Number of Institutions')
+axes[1].set_xticks(range(1, 4))
+plt.tight_layout()
+plt.show()
+
+```
+
+---
+
 
 ## Exploratory Data Analysis
 
@@ -144,7 +193,24 @@ plt.show()
   - Institutions serving more low-income students tend to have lower median earnings.
 - Takeaway: **Institutional performance and student composition** are more strongly related to outcomes than tuition alone.
 
+
 ---
+
+## Correlation Matrix of Numerical Features
+
+```{python}
+numerical_columns = college_final.select_dtypes(include=['number']).columns
+plt.figure(figsize=(12, 10))
+correlation_matrix = college_final[numerical_columns].corr()
+sns.heatmap(correlation_matrix, annot=False, fmt=".2f", cmap='coolwarm', cbar=True)
+plt.title('Correlation Matrix of Numerical Variables')
+plt.tight_layout()
+plt.show()
+
+```
+
+---
+
 
 ## Regression Setup
 
