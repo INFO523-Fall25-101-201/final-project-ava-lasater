@@ -50,7 +50,7 @@ Which features provide the strongest predictive signal across linear and machine
 - Tuition has a positive but moderate association with long-term earnings.
 - Retention and completion rates are among the strongest predictors of earnings.
 - Pell Grant percentage is strongly negatively associated with earnings, reflecting socioeconomic patterns.
-- Classification models achieve 77–82% accuracy; random forest performs best.
+- Classification models achieve 77–82% accuracy.
 - Institution size (UGDS), retention, completion, tuition, and socioeconomic mix provide the strongest predictive signal.
 - Locale categories and school control type add minimal predictive value once other variables are included.
 
