@@ -2,112 +2,112 @@
   {
     "objectID": "presentation.html#overview",
     "href": "presentation.html#overview",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Overview",
     "text": "Overview\n\nGoal: Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.\nData: U.S. Department of Education College Scorecard\nMethods:\n\nExploratory data analysis\nLinear & Ridge regression\nLogistic regression & Random Forest\nFeature selection & permutation importance\n\nKey focus: Which institutional features most strongly predict higher earnings 10 years after enrollment?"
   },
   {
     "objectID": "presentation.html#research-questions",
     "href": "presentation.html#research-questions",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Research Questions",
     "text": "Research Questions\n\nRQ1. How do tuition and financial burden relate to median earnings 10 years after enrollment?\nRQ2. How do institutional characteristics (region, locale, control, size) and student composition (Pell share) relate to earnings and completion?\nRQ3. Can institutional features reliably classify colleges as high-earning vs. low-earning?\nRQ4. Which features are most important for prediction across linear and machine-learning models?"
   },
   {
     "objectID": "presentation.html#data-preprocessing",
     "href": "presentation.html#data-preprocessing",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Data & Preprocessing",
     "text": "Data & Preprocessing\n\nSource: U.S. College Scorecard (institution-level data).\nScope:\n\nFiltered to institutions that primarily award bachelor’s degrees.\nFocused on recent cohorts with available 10-year earnings.\n\nKey variable groups:\n\nCost: in-state & out-of-state tuition, median debt.\nInstitutional: enrollment (UGDS), control, region, locale.\nOutcomes: retention, 4-year completion, 10-year median earnings.\n\nMissing data:\n\nDropped columns with severe missingness (e.g., detailed demographics).\nDropped rows with missing core cost/outcome variables rather than imputing."
   },
   {
     "objectID": "presentation.html#sample-structure-check",
     "href": "presentation.html#sample-structure-check",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Sample Structure Check",
     "text": "Sample Structure Check\n\nCompared original vs. cleaned distributions for:\n\nState, region, locale, and control type.\n\nResult: Filtering and missing-data removal:\n\nDid not wipe out any region or control group.\nPreserved a broad mix of public and private institutions across the U.S.\n\nInterpretation: The cleaned dataset still represents a diverse institutional landscape."
   },
   {
     "objectID": "presentation.html#exploratory-data-analysis",
     "href": "presentation.html#exploratory-data-analysis",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Exploratory Data Analysis",
     "text": "Exploratory Data Analysis\n\nCost:\n\nIn-state and out-of-state tuition are right-skewed.\nMost schools between ≈ $10K–$40K; a small number of very expensive institutions.\n\nSize (UGDS):\n\nStrong right skew; most enroll 1K–6K students.\nA few very large institutions (e.g., large online providers).\n\nOutcomes:\n\nRetention and completion rates are bounded [0,1] and cluster toward higher values.\nIdentified and removed institutions with impossible patterns (e.g., 0% completion at all time horizons, 0% retention with missing context).\n\nEarnings:\n\n10-year earnings percentiles are skewed; median earnings used as a stable target."
   },
   {
     "objectID": "presentation.html#correlation-patterns",
     "href": "presentation.html#correlation-patterns",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Correlation Patterns",
     "text": "Correlation Patterns\n\nTuition has only weak to moderate correlation with earnings.\nRetention and completion rates show moderate positive correlations with earnings.\nPell Grant share (PCTPELL) shows negative correlations with both earnings and completion:\n\nInstitutions serving more low-income students tend to have lower median earnings.\n\nTakeaway: Institutional performance and student composition are more strongly related to outcomes than tuition alone."
   },
   {
     "objectID": "presentation.html#regression-setup",
     "href": "presentation.html#regression-setup",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Regression Setup",
     "text": "Regression Setup\n\nTarget: Median earnings 10 years after enrollment (MD_EARN_WNE_P10).\nPredictors:\n\nCost: TUITIONFEE_IN, TUITIONFEE_OUT, median debt.\nInstitution: UGDS, region dummies, locale dummies, control dummies.\nOutcomes: retention and completion rates.\n\nPreprocessing:\n\nLog-transform skewed variables where appropriate.\nStandardize continuous predictors.\nOne-hot encode categorical variables (region, locale, control)."
   },
   {
     "objectID": "presentation.html#linear-ridge-regression-results",
     "href": "presentation.html#linear-ridge-regression-results",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Linear & Ridge Regression Results",
     "text": "Linear & Ridge Regression Results\n\nLinear model (OLS):\n\nAdjusted R² ≈ 0.57 — institutional features explain ~57% of variance in earnings.\nStrong positive coefficients: in-state tuition, retention, 4-year completion.\nStrong negative coefficients: median debt, Pell share, several lower-wage regions.\n\nMulticollinearity:\n\nHigh VIF for tuition variables → removed out-of-state tuition for OLS.\nRidge regression refit with both tuition variables:\n\nSimilar R² (~0.49 on test data).\nMore stable coefficients in the presence of collinearity.\n\n\nLimitations:\n\nResiduals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation."
   },
   {
     "objectID": "presentation.html#feature-selection-for-classification",
     "href": "presentation.html#feature-selection-for-classification",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Feature Selection for Classification",
     "text": "Feature Selection for Classification\n\nOutcome for classification: High-earning vs. low-earning institution\n(above vs. below sample median earnings).\nFeature selection strategy:\n\nSelectKBest (f_classif) to identify top 15 statistically relevant predictors.\nRandom Forest feature importance to capture nonlinear effects and interactions.\nFinal feature set = union of the top features from both methods.\n\nSelf-taught component:\n\nAdded permutation importance to quantify how much model performance drops when each feature is shuffled."
   },
   {
     "objectID": "presentation.html#logistic-regression-classification",
     "href": "presentation.html#logistic-regression-classification",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Logistic Regression Classification",
     "text": "Logistic Regression Classification\n\nModel: Logistic regression with standardized predictors.\nPerformance:\n\nAccuracy ≈ 0.77\nPrecision ≈ 0.78\nRecall ≈ 0.77\nF1 ≈ 0.77\n5-fold CV F1 ≈ 0.80\n\nInterpretation:\n\nA simple linear decision boundary separates high- and low-earning institutions reasonably well.\nCoefficient patterns mirror regression results: retention, completion, tuition, and Pell share are key drivers."
   },
   {
     "objectID": "presentation.html#random-forest-classification",
     "href": "presentation.html#random-forest-classification",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Classification",
     "text": "Random Forest Classification\n\nModel: Random Forest classifier using the selected feature set.\nPerformance:\n\nAccuracy ≈ 0.78\nPrecision, Recall, F1 ≈ 0.78\n5-fold CV F1 ≈ 0.82\n\nInsights:\n\nSlightly better predictive performance than logistic regression.\nCaptures nonlinear relationships and interactions among:\n\nEnrollment size (UGDS)\nRetention and completion\nTuition levels\nPell share\nCertain regions"
   },
   {
     "objectID": "presentation.html#permutation-importance-random-forest",
     "href": "presentation.html#permutation-importance-random-forest",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Permutation Importance (Random Forest)",
     "text": "Permutation Importance (Random Forest)\n\nTop predictors for high-earning institutions:\n\nUGDS (student body size)\nRET_FT4 (first-year retention)\nTUITIONFEE_OUT and TUITIONFEE_IN\nPCTPELL (share of Pell recipients)\nRegional indicators (e.g., Southeast, Mid East)\n\nLow-impact features:\n\nMany fine-grained locale categories\nControl type contributes relatively little once other factors are included.\n\nTakeaway: Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting."
   },
   {
     "objectID": "presentation.html#calibration-probabilities-vs.-accuracy",
     "href": "presentation.html#calibration-probabilities-vs.-accuracy",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Calibration: Probabilities vs. Accuracy",
-    "text": "Calibration: Probabilities vs. Accuracy\n\nCalibration curve comparison:\n\nLogistic regression:\n\nProbabilities closely follow the 45° line → well-calibrated.\nPredicted probabilities match observed frequencies.\n\nRandom Forest:\n\nProduces extreme probabilities (mostly near 0 or 1).\nOverconfident and poorly calibrated without post-processing.\n\n\nImplication:\n\nRandom Forest is better for classification accuracy.\nLogistic regression is better when probability estimates are used for decision-making or interpretation."
+    "text": "Calibration: Probabilities vs. Accuracy"
   },
   {
     "objectID": "presentation.html#key-findings",
     "href": "presentation.html#key-findings",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Key Findings",
     "text": "Key Findings\n\nHigher tuition is associated with higher earnings, but:\n\nEffects are modest and intertwined with other institutional features.\n\nRetention and completion rates are strong, consistent predictors of long-term earnings.\nInstitutions with higher Pell Grant shares tend to have lower earnings, reflecting underlying socioeconomic differences.\nModel performance:\n\nLinear and Ridge regression explain ~50–57% of earnings variation.\nClassification models distinguish high- vs low-earning institutions with F1 ≈ 0.77–0.82.\n\nStudent outcomes and composition matter at least as much as sticker price."
   },
   {
     "objectID": "presentation.html#limitations-future-work",
     "href": "presentation.html#limitations-future-work",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Limitations & Future Work",
     "text": "Limitations & Future Work\n\nData limitations:\n\nInstitution-level aggregates; no student-level or major-level detail.\nMissing data and reporting differences across institutions.\n\nNo causal claims:\n\nObservational, cross-sectional analysis; cannot separate institution effect from selection bias.\n\nFuture directions:\n\nIncorporate program/major mix and selectivity.\nExplore causal methods or matching designs.\nExamine changes over time (longitudinal trends)."
   },
   {
     "objectID": "presentation.html#takeaways",
     "href": "presentation.html#takeaways",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Takeaways",
     "text": "Takeaways\n\nTuition alone is an incomplete indicator of value.\nAcademic success metrics (retention & completion) and student demographics are central to explaining earnings.\nMachine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers.\nFor policy, student advising, or institutional benchmarking, interpreting both cost and outcomes together is essential."
   },
@@ -170,35 +170,35 @@
   {
     "objectID": "presentation.html#distribution-of-institutions-by-region",
     "href": "presentation.html#distribution-of-institutions-by-region",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Distribution of Institutions by Region",
     "text": "Distribution of Institutions by Region"
   },
   {
     "objectID": "presentation.html#distribution-of-institutions-by-locale",
     "href": "presentation.html#distribution-of-institutions-by-locale",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Distribution of Institutions by Locale",
     "text": "Distribution of Institutions by Locale"
   },
   {
     "objectID": "presentation.html#distribution-of-institutions-by-control",
     "href": "presentation.html#distribution-of-institutions-by-control",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Distribution of Institutions by Control",
     "text": "Distribution of Institutions by Control"
   },
   {
     "objectID": "presentation.html#correlation-matrix-of-numerical-features",
     "href": "presentation.html#correlation-matrix-of-numerical-features",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Correlation Matrix of Numerical Features",
     "text": "Correlation Matrix of Numerical Features"
   },
   {
     "objectID": "presentation.html#linear-regression-results",
     "href": "presentation.html#linear-regression-results",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Linear Regression Results",
     "text": "Linear Regression Results\n\n\nMean Squared Error: 110300510.89\nR-squared: 0.4855"
   },
@@ -219,8 +219,43 @@
   {
     "objectID": "presentation.html#ridge-regression-results",
     "href": "presentation.html#ridge-regression-results",
-    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "title": "Predicting Post-Graduation Earnings",
     "section": "Ridge Regression Results",
     "text": "Ridge Regression Results\n\n\nRidge Regression:\nMean Squared Error: 110226157.793066\nR-squared: 0.48548326813022713"
+  },
+  {
+    "objectID": "presentation.html#logistic-regression-results",
+    "href": "presentation.html#logistic-regression-results",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Logistic Regression Results",
+    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.08 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
+  },
+  {
+    "objectID": "presentation.html#selectkbest-feature-selection",
+    "href": "presentation.html#selectkbest-feature-selection",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "SelectKBest Feature Selection",
+    "text": "SelectKBest Feature Selection"
+  },
+  {
+    "objectID": "presentation.html#permutation-importance",
+    "href": "presentation.html#permutation-importance",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Permutation Importance",
+    "text": "Permutation Importance"
+  },
+  {
+    "objectID": "presentation.html#random-forest-results",
+    "href": "presentation.html#random-forest-results",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Random Forest Results",
+    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.09 seconds\nRandom Forest Accuracy: 0.7830508474576271\nRandom Forest Precision: 0.7844073429117245\nRandom Forest Recall: 0.7830508474576271\nRandom Forest F-1 Score: 0.7828262727459873"
+  },
+  {
+    "objectID": "presentation.html#calibration-probabilities-vs.-accuracy-1",
+    "href": "presentation.html#calibration-probabilities-vs.-accuracy-1",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Calibration: Probabilities vs. Accuracy",
+    "text": "Calibration: Probabilities vs. Accuracy\n\nCalibration curve comparison:\n\nLogistic Regression\n\nFollows the 45° line closely → strong, smooth calibration.\nPredicted probabilities align well with observed frequencies.\n\nRandom Forest\n\nAlso tracks the ideal calibration line with only mild deviations.\nSlightly less smooth in the mid-range but still reasonably well calibrated.\n\n\nImplication:\n\nBoth models provide reliable probability estimates, though Logistic Regression is the most consistently calibrated.\nRandom Forest delivers slightly better classification accuracy, while Logistic Regression is preferred when probability precision and interpret"
   }
 ]
