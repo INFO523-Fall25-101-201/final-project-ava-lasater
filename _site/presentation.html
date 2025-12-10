@@ -139,11 +139,11 @@ Ava Lasater
 </div>
 
 </section>
-<section id="overview" class="slide level2">
+<section id="overview" class="slide level2 smaller">
 <h2>Overview</h2>
 <ul>
 <li><strong>Goal:</strong> Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.</li>
-<li><strong>Data:</strong> U.S. Department of Education <strong>College Scorecard</strong> (bachelor’s-degree-granting institutions).</li>
+<li><strong>Data:</strong> U.S. Department of Education <strong>College Scorecard</strong></li>
 <li><strong>Methods:</strong>
 <ul>
 <li>Exploratory data analysis</li>
@@ -154,7 +154,7 @@ Ava Lasater
 <li><strong>Key focus:</strong> Which institutional features most strongly predict higher earnings 10 years after enrollment?</li>
 </ul>
 </section>
-<section id="research-questions" class="slide level2">
+<section id="research-questions" class="slide level2 smaller">
 <h2>Research Questions</h2>
 <ul>
 <li><strong>RQ1.</strong> How do tuition and financial burden relate to median earnings 10 years after enrollment?</li>
@@ -163,7 +163,7 @@ Ava Lasater
 <li><strong>RQ4.</strong> Which features are most important for prediction across linear and machine-learning models?</li>
 </ul>
 </section>
-<section id="data-preprocessing" class="slide level2">
+<section id="data-preprocessing" class="slide level2 smaller">
 <h2>Data &amp; Preprocessing</h2>
 <ul>
 <li><strong>Source:</strong> U.S. College Scorecard (institution-level data).</li>
@@ -185,7 +185,7 @@ Ava Lasater
 </ul></li>
 </ul>
 </section>
-<section id="sample-structure-check" class="slide level2">
+<section id="sample-structure-check" class="slide level2 smaller">
 <h2>Sample Structure Check</h2>
 <ul>
 <li>Compared <strong>original vs.&nbsp;cleaned</strong> distributions for:
@@ -200,9 +200,9 @@ Ava Lasater
 <li>Interpretation: The cleaned dataset still represents a diverse institutional landscape.</li>
 </ul>
 </section>
-<section id="distribution-of-institutions-by-region" class="slide level2">
+<section id="distribution-of-institutions-by-region" class="slide level2 smaller">
 <h2>Distribution of Institutions by Region</h2>
-<div id="ee545b79" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="4">
+<div id="247a46bb" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -212,9 +212,9 @@ Ava Lasater
 </div>
 </div>
 </section>
-<section id="distribution-of-institutions-by-locale" class="slide level2">
+<section id="distribution-of-institutions-by-locale" class="slide level2 smaller">
 <h2>Distribution of Institutions by Locale</h2>
-<div id="f3fc08a0" class="cell" data-fig-height="6" data-fig-width="10" data-execution_count="5">
+<div id="94eaec7f" class="cell" data-fig-height="6" data-fig-width="10" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -224,9 +224,9 @@ Ava Lasater
 </div>
 </div>
 </section>
-<section id="distribution-of-institutions-by-control" class="slide level2">
+<section id="distribution-of-institutions-by-control" class="slide level2 smaller">
 <h2>Distribution of Institutions by Control</h2>
-<div id="cba87337" class="cell" data-fig-height="6" data-fig-width="10" data-execution_count="6">
+<div id="14504f85" class="cell" data-fig-height="6" data-fig-width="10" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -236,7 +236,7 @@ Ava Lasater
 </div>
 </div>
 </section>
-<section id="exploratory-data-analysis" class="slide level2">
+<section id="exploratory-data-analysis" class="slide level2 smaller">
 <h2>Exploratory Data Analysis</h2>
 <ul>
 <li><strong>Cost:</strong>
@@ -260,7 +260,7 @@ Ava Lasater
 </ul></li>
 </ul>
 </section>
-<section id="correlation-patterns" class="slide level2">
+<section id="correlation-patterns" class="slide level2 smaller">
 <h2>Correlation Patterns</h2>
 <ul>
 <li>Tuition has <strong>only weak to moderate correlation</strong> with earnings.</li>
@@ -272,19 +272,19 @@ Ava Lasater
 <li>Takeaway: <strong>Institutional performance and student composition</strong> are more strongly related to outcomes than tuition alone.</li>
 </ul>
 </section>
-<section id="correlation-matrix-of-numerical-features" class="slide level2">
+<section id="correlation-matrix-of-numerical-features" class="slide level2 smaller">
 <h2>Correlation Matrix of Numerical Features</h2>
-<div id="2bc213ae" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="7">
+<div id="c6c8ae86" class="cell" data-fig-height="6" data-fig-width="8" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-8-output-1.png" width="1083" height="940"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-8-output-1.png" width="737" height="556"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="regression-setup" class="slide level2">
+<section id="regression-setup" class="slide level2 smaller">
 <h2>Regression Setup</h2>
 <ul>
 <li><strong>Target:</strong> Median earnings 10 years after enrollment (<strong>MD_EARN_WNE_P10</strong>).</li>
@@ -302,7 +302,7 @@ Ava Lasater
 </ul></li>
 </ul>
 </section>
-<section id="linear-ridge-regression-results" class="slide level2">
+<section id="linear-ridge-regression-results" class="slide level2 smaller">
 <h2>Linear &amp; Ridge Regression Results</h2>
 <ul>
 <li><strong>Linear model (OLS):</strong>
@@ -326,13 +326,34 @@ Ava Lasater
 </ul></li>
 </ul>
 </section>
-<section id="linear-regression-results" class="slide level2">
+<section id="linear-regression-results" class="slide level2 smaller">
 <h2>Linear Regression Results</h2>
-<div id="972f9749" class="cell" data-fig-height="6" data-fig-width="7" data-execution_count="8">
+<div id="6408f05a" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="8">
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean Squared Error: 110300510.89
+R-squared: 0.4855</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-9-output-1.png" width="652" height="556"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-9-output-2.png" width="1132" height="940"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ridge-regression-results" class="slide level2 smaller">
+<h2>Ridge Regression Results</h2>
+<div id="40e5bcac" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="9">
+<div class="cell-output cell-output-stdout">
+<pre><code>Ridge Regression:
+Mean Squared Error: 110226157.793066
+R-squared: 0.48548326813022713</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-10-output-2.png" width="863" height="461"></p>
 </figure>
 </div>
 </div>

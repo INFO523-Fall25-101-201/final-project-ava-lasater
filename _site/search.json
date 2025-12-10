@@ -4,7 +4,7 @@
     "href": "presentation.html#overview",
     "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
     "section": "Overview",
-    "text": "Overview\n\nGoal: Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.\nData: U.S. Department of Education College Scorecard (bachelor’s-degree-granting institutions).\nMethods:\n\nExploratory data analysis\nLinear & Ridge regression\nLogistic regression & Random Forest\nFeature selection & permutation importance\n\nKey focus: Which institutional features most strongly predict higher earnings 10 years after enrollment?"
+    "text": "Overview\n\nGoal: Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.\nData: U.S. Department of Education College Scorecard\nMethods:\n\nExploratory data analysis\nLinear & Ridge regression\nLogistic regression & Random Forest\nFeature selection & permutation importance\n\nKey focus: Which institutional features most strongly predict higher earnings 10 years after enrollment?"
   },
   {
     "objectID": "presentation.html#research-questions",
@@ -200,7 +200,7 @@
     "href": "presentation.html#linear-regression-results",
     "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
     "section": "Linear Regression Results",
-    "text": "Linear Regression Results"
+    "text": "Linear Regression Results\n\n\nMean Squared Error: 110300510.89\nR-squared: 0.4855"
   },
   {
     "objectID": "presentation.html#hell-overview",
@@ -215,5 +215,12 @@
     "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
     "section": "Distribution of Institutions by Region",
     "text": "Distribution of Institutions by Region"
+  },
+  {
+    "objectID": "presentation.html#ridge-regression-results",
+    "href": "presentation.html#ridge-regression-results",
+    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "section": "Ridge Regression Results",
+    "text": "Ridge Regression Results\n\n\nRidge Regression:\nMean Squared Error: 110226157.793066\nR-squared: 0.48548326813022713"
   }
 ]
