@@ -200,6 +200,20 @@
     "href": "presentation.html#linear-regression-results",
     "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
     "section": "Linear Regression Results",
-    "text": "Linear Regression Results\ny = college_regression['MD_EARN_WNE_P10']\n# X = all columns except the target\nX = college_regression.drop(columns=['MD_EARN_WNE_P10'])\n# Train-test split\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)\n\n# Adding a constant for OLS\nX_train_with_const = sm.add_constant(X_train)\nX_test_with_const = sm.add_constant(X_test)\n\n# Fitting the OLS model\nmodel = sm.OLS(y_train, X_train_with_const).fit()\n\n# Making predictions\ny_pred = model.predict(X_test_with_const)\n\n# Evaluating the model\n# creating a residual plot\nX_test_with_const = sm.add_constant(X_test)\npredictions = model.predict(X_test_with_const)\npredictions = pd.to_numeric(predictions, errors='coerce')\nresiduals = y_test - predictions\nresiduals = pd.to_numeric(residuals, errors='coerce').fillna(0)\n\nfig, axes = plt.subplots(2, 2, figsize=(14, 12))\n\nsns.residplot(x=predictions, y=residuals, lowess=False, ax=axes[0,0], color = 'royalblue')\naxes[0,0].set_xlabel('Predicted Values')\naxes[0,0].set_ylabel('Residuals')\naxes[0,0].set_title('Residuals vs Fitted')\n\n# regression fit\naxes[0,1].scatter(predictions, y_test, label='Data', color = 'royalblue')\naxes[0,1].plot(y_test, y_test, color='red', label='Ideal Fit')\naxes[0,1].set_xlabel('Predicted Days Lasted')\naxes[0,1].set_ylabel('Actual Days Lasted')\naxes[0,1].set_title('Predicted vs Actual')\naxes[0,1].legend()\n\n# Q-Q plot\nsm.qqplot(residuals, line='45', fit=True, ax=axes[1,0], markerfacecolor='royalblue', markeredgecolor='royalblue')\naxes[1,0].set_title('Q-Q Plot of Residuals')\n\n# residual distribution \nsns.histplot(residuals, ax=axes[1,1], color = 'royalblue')\naxes[1,1].set_title('Residual Distribution')\naxes[1,1].set_xlabel('Residuals')\n\nplt.tight_layout()\nplt.show()"
+    "text": "Linear Regression Results"
+  },
+  {
+    "objectID": "presentation.html#hell-overview",
+    "href": "presentation.html#hell-overview",
+    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "section": "Hell Overview",
+    "text": "Hell Overview\n\nGoal: Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.\nData: U.S. Department of Education College Scorecard (bachelor’s-degree-granting institutions).\nMethods:\n\nExploratory data analysis\nLinear & Ridge regression\nLogistic regression & Random Forest\nFeature selection & permutation importance\n\nKey focus: Which institutional features most strongly predict higher earnings 10 years after enrollment?"
+  },
+  {
+    "objectID": "presentation.html#distribution-of-institutions-by-region-1",
+    "href": "presentation.html#distribution-of-institutions-by-region-1",
+    "title": "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics",
+    "section": "Distribution of Institutions by Region",
+    "text": "Distribution of Institutions by Region"
   }
 ]

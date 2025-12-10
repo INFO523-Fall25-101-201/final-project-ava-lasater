@@ -10,6 +10,8 @@ title-slide-attributes:
 format:
   revealjs:
     theme:  ['data/customtheming.scss']
+    transition: slide
+    slide-number: true
   
 editor: visual
 jupyter: python3
@@ -36,17 +38,44 @@ sns.set_theme(style="whitegrid")
 sns.set_context("notebook", font_scale=1.1)
 
 import matplotlib.pyplot as plt
-plt.rcParams['figure.dpi'] = 300
-plt.rcParams['savefig.dpi'] = 300
-plt.rcParams['figure.figsize'] = (6, 6 * 0.618)
 ```
 
 ```{python}
 #| label: load-data
 #| include: false
 # Load data in Python
-college_data_selected = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Preprocessed.csv')
+
+college_data = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
+college_data_ND = college_data.drop_duplicates()
+selected_columns = ['TUITIONFEE_IN', 'TUITIONFEE_OUT', 'NPT4_PUB', 'NPT4_PRIV', 'NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'ST_FIPS', 'REGION', 'LOCALE', 'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON',
+                    'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'CONTROL', 'PREDDEG', 'ADM_RATE', 'UGDS',  'LOCALE2',
+                    'PCTPELL', 'PCTFLOAN',  'ENDOWBEGIN', 'ENDOWEND', 'STUFACR', 'SAT_AVG',
+                    'C150_4', 'COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                    'RPY_1YR_RT',  'COMPL_RPY_1YR_RT',  'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                    'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',  'MD_EARN_WNE_P10',  'PCT10_EARN_WNE_P10',
+                    'PCT25_EARN_WNE_P10',  'PCT75_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',  'MD_EARN_WNE_P6',
+                    'PCT10_EARN_WNE_P6',  'PCT25_EARN_WNE_P6',  'PCT75_EARN_WNE_P6',  'PCT90_EARN_WNE_P6',  'C100_4', 'INSTNM', 'CITY', 'RET_FT4', 'C200_4'] 
+
+college_data_selected = college_data_ND[selected_columns]
+college_data_selected = college_data_selected[college_data_ND['PREDDEG'] == 3]
+should_be_numeric_columns = ['COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                   'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                   'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',
+                   'PCT10_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',
+                   'PCT10_EARN_WNE_P6',  'PCT90_EARN_WNE_P6']
+for col in should_be_numeric_columns:
+    college_data_selected[col] = pd.to_numeric(college_data_selected[col], errors='coerce') 
+
+college_data_selected_v2 = college_data_selected.drop(columns=['NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'NPT4_PUB', 'NPT4_PRIV', 'LOCALE2',
+                    'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'BOOKSUPPLY', 
+                    'ENDOWBEGIN', 'ENDOWEND', 'ADM_RATE', 'RPY_1YR_RT', 'COMPL_RPY_1YR_RT', 'SAT_AVG'])
+college_final = college_data_selected_v2.dropna()
+
 college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_RegressionData.csv')
+
+
 
 ```
 
@@ -104,14 +133,20 @@ college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/Col
 ## Distribution of Institutions by Region
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+#| fig-align: center
+#| fig-responsive: false
+
+fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 # orginial distribution
 axes[0].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5,
              edgecolor='black', color='steelblue')
 axes[0].set_title('Distribution of Institutions by Region (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
-axes[1].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5,
+axes[1].hist(college_final['REGION'], bins=np.arange(1, 10)-0.5,
              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Region (Cleaned Data)')
 axes[1].set_xlabel('Region Code')
@@ -121,20 +156,23 @@ plt.tight_layout()
 plt.show()
 
 ```
-
 ---
 
 ## Distribution of Institutions by Locale
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+fig, axes = plt.subplots(2, 1, figsize=(10,6), sharex=True)
 # orginial distribution
 axes[0].hist(college_data_selected['LOCALE'], bins=np.arange(11, 44)-0.5,
              edgecolor='black', color='steelblue')
 axes[0].set_title('Distribution of Institutions by Locale (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
-axes[1].hist(college_data_selected['LOCALE'], bins=np.arange(11, 44)-0.5,
+axes[1].hist(college_final['LOCALE'], bins=np.arange(11, 44)-0.5,
              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Locale (Cleaned Data)')
 axes[1].set_xlabel('Locale Code')
@@ -150,14 +188,18 @@ plt.show()
 ## Distribution of Institutions by Control
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+#| echo: false
+#| fig-width: 10
+#| fig-height: 6
+
+fig, axes = plt.subplots(2, 1, figsize=(10,6), sharex=True)
 # orginial distribution
 axes[0].hist(college_data_selected['CONTROL'], bins=np.arange(1, 4)-0.5,
              edgecolor='black', color='steelblue')
 axes[0].set_title('Distribution of Institutions by Control (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
-axes[1].hist(college_data_selected['CONTROL'], bins=np.arange(1, 4)-0.5,
+axes[1].hist(college_final['CONTROL'], bins=np.arange(1, 4)-0.5,
              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Control (Cleaned Data)')
 axes[1].set_xlabel('Control of Institution (1=Public, 2=Private Non-Profit, 3=Private For-Profit)')
@@ -201,6 +243,9 @@ plt.show()
 ## Correlation Matrix of Numerical Features
 
 ```{python}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 10
 numerical_columns = college_data_selected.select_dtypes(include=['number']).columns
 plt.figure(figsize=(12, 10))
 correlation_matrix = college_data_selected[numerical_columns].corr()
@@ -246,7 +291,18 @@ plt.show()
 
 ## Linear Regression Results
 
-```{.python code-line-numbers="18-50"}
+```{python}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 6
+
+import statsmodels.api as sm
+from sklearn.model_selection import (
+    train_test_split,
+    cross_val_score,
+    KFold,
+    LeaveOneOut)
+
 y = college_regression['MD_EARN_WNE_P10']
 # X = all columns except the target
 X = college_regression.drop(columns=['MD_EARN_WNE_P10'])
@@ -271,7 +327,7 @@ predictions = pd.to_numeric(predictions, errors='coerce')
 residuals = y_test - predictions
 residuals = pd.to_numeric(residuals, errors='coerce').fillna(0)
 
-fig, axes = plt.subplots(2, 2, figsize=(14, 12))
+fig, axes = plt.subplots(2, 2, figsize=(7, 6))
 
 sns.residplot(x=predictions, y=residuals, lowess=False, ax=axes[0,0], color = 'royalblue')
 axes[0,0].set_xlabel('Predicted Values')
