@@ -396,10 +396,19 @@ model_summary2 = model.summary2()
 mse = mean_squared_error(y_test, y_pred)
 print(f'Mean Squared Error: {mse:.2f}')
 
+# Calcualte r2
+r2 = r2_score(y_test, y_pred)
+print(f'R-squared: {r2:.4f}')
+
 ols_coefs = pd.Series(model.params, index=X_train_with_const.columns)
 ols_coefs = ols_coefs.drop('const')  # remove intercept for cleaner plot
+X_test_with_const = sm.add_constant(X_test)
+predictions = model.predict(X_test_with_const)
+predictions = pd.to_numeric(predictions, errors='coerce')
+residuals = y_test - predictions
+residuals = pd.to_numeric(residuals, errors='coerce').fillna(0)
 
-# --- Combined Plot ---
+# Combined Plot
 fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
 # Residual Plot
@@ -427,6 +436,7 @@ axes[1].set_ylabel("Feature")
 
 plt.tight_layout()
 plt.show()
+```
 
 ***
 ## Ridge Regression Results {.smaller}
