@@ -342,14 +342,15 @@ plt.show()
 ## Linear & Ridge Regression Results {.smaller}
 
 - **Linear model (OLS):**
-  - Adjusted R² ≈ **0.57** — institutional features explain ~57% of variance in earnings.
-  - Strong positive coefficients: in-state tuition, retention, 4-year completion.
-  - Strong negative coefficients: median debt, Pell share, several lower-wage regions.
+  - Adjusted R² ≈ 0.57 — institutional features explain over half of the variation in 10-year earnings.
+  - Largest positive coefficients: in-state tuition, first-year retention, 4-year completion, and enrollment size.
+  - Largest negative coefficients: Pell Grant share (PCTPELL), median student debt, and several lower-earning regional indicators.
 - **Multicollinearity:**
   - High VIF for tuition variables → removed out-of-state tuition for OLS.
   - Ridge regression refit with both tuition variables:
     - Similar R² (~0.49 on test data).
-    - More stable coefficients in the presence of collinearity.
+    - Coefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).
+    - The largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).
 - **Limitations:**
   - Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.
 
@@ -395,43 +396,37 @@ model_summary2 = model.summary2()
 mse = mean_squared_error(y_test, y_pred)
 print(f'Mean Squared Error: {mse:.2f}')
 
-# Extracting Adjusted R-squared from the model's summary
-r2 = r2_score(y_test, y_pred)
-print(f'R-squared: {r2:.4f}')
-# creating a residual plot
-X_test_with_const = sm.add_constant(X_test)
-predictions = model.predict(X_test_with_const)
-predictions = pd.to_numeric(predictions, errors='coerce')
-residuals = y_test - predictions
-residuals = pd.to_numeric(residuals, errors='coerce').fillna(0)
+ols_coefs = pd.Series(model.params, index=X_train_with_const.columns)
+ols_coefs = ols_coefs.drop('const')  # remove intercept for cleaner plot
 
-fig, axes = plt.subplots(2, 2, figsize=(8, 6))
+# --- Combined Plot ---
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
-sns.residplot(x=predictions, y=residuals, lowess=False, ax=axes[0,0], color = 'royalblue')
-axes[0,0].set_xlabel('Predicted Values')
-axes[0,0].set_ylabel('Residuals')
-axes[0,0].set_title('Residuals vs Fitted')
+# Residual Plot
+sns.residplot(
+    x=predictions,
+    y=residuals,
+    lowess=True,
+    color='steelblue',
+    line_kws={'color': 'firebrick', 'lw': 1},
+    ax=axes[0]
+)
+axes[0].set_xlabel('Predicted Values')
+axes[0].set_ylabel('Residuals')
+axes[0].set_title('Residual Plot for OLS Regression')
 
-# regression fit
-axes[0,1].scatter(predictions, y_test, label='Data', color = 'royalblue')
-axes[0,1].plot(y_test, y_test, color='red', label='Ideal Fit')
-axes[0,1].set_xlabel('Predicted Days Lasted')
-axes[0,1].set_ylabel('Actual Days Lasted')
-axes[0,1].set_title('Predicted vs Actual')
-axes[0,1].legend()
-
-# Q-Q plot
-sm.qqplot(residuals, line='45', fit=True, ax=axes[1,0], markerfacecolor='royalblue', markeredgecolor='royalblue')
-axes[1,0].set_title('Q-Q Plot of Residuals')
-
-# residual distribution 
-sns.histplot(residuals, ax=axes[1,1], color = 'royalblue')
-axes[1,1].set_title('Residual Distribution')
-axes[1,1].set_xlabel('Residuals')
+# Coefficient Plot
+ols_coefs.sort_values().plot(
+    kind='barh',
+    color='steelblue',
+    ax=axes[1]
+)
+axes[1].set_title("OLS Regression Coefficients")
+axes[1].set_xlabel("Coefficient Value")
+axes[1].set_ylabel("Feature")
 
 plt.tight_layout()
 plt.show()
-```
 
 ***
 ## Ridge Regression Results {.smaller}
@@ -471,14 +466,41 @@ mse = mean_squared_error(y_test, r_y_pred)
 print('Ridge Regression:')
 print(f'Mean Squared Error: {mse}')
 
-# Since Ridge doesn't provide AIC, BIC directly, we focus on what's available
-r2 = r2_score(y_test, y_pred)
+# Compute residuals for ridge regression
+r2 = r2_score(y_test, r_y_pred)
 print(f'R-squared: {r2}')
+
 residuals = y_test - r_y_pred
-sns.residplot(x = r_y_pred, y = residuals, lowess = True, color = 'royalblue', line_kws = {'color': 'firebrick', 'lw': 1})
-plt.xlabel('Predicted Values')
-plt.ylabel('Residuals')
-plt.title('Residual Plot for Ridge Regression')
+
+# Prepare coefficient series
+ridge_coefs = pd.Series(ridge_reg.coef_, index=X_train.columns)
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# Residual Plot
+sns.residplot(
+    x=r_y_pred,
+    y=residuals,
+    lowess=True,
+    color='royalblue',
+    line_kws={'color': 'firebrick', 'lw': 1},
+    ax=axes[0]
+)
+axes[0].set_xlabel('Predicted Values')
+axes[0].set_ylabel('Residuals')
+axes[0].set_title('Residual Plot for Ridge Regression')
+
+# Coefficient Plot
+ridge_coefs.sort_values().plot(
+    kind='barh',
+    color='steelblue',
+    ax=axes[1]
+)
+axes[1].set_title("Ridge Regression Coefficients")
+axes[1].set_xlabel("Coefficient Value")
+axes[1].set_ylabel("Feature")
+
+plt.tight_layout()
 plt.show()
 
 ```
