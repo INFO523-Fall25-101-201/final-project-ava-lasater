@@ -24,6 +24,7 @@ execute:
 # Load packages here
 import pandas as pd
 import seaborn as sns
+import numpy as np
 ```
 
 ```{python}
@@ -110,7 +111,7 @@ axes[0].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5,
 axes[0].set_title('Distribution of Institutions by Region (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
-axes[1].hist(college_final['REGION'], bins=np.arange(1, 10)-0.5,
+axes[1].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5,
              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Region (Cleaned Data)')
 axes[1].set_xlabel('Region Code')
@@ -133,7 +134,7 @@ axes[0].hist(college_data_selected['LOCALE'], bins=np.arange(11, 44)-0.5,
 axes[0].set_title('Distribution of Institutions by Locale (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
-axes[1].hist(college_final['LOCALE'], bins=np.arange(11, 44)-0.5,
+axes[1].hist(college_data_selected['LOCALE'], bins=np.arange(11, 44)-0.5,
              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Locale (Cleaned Data)')
 axes[1].set_xlabel('Locale Code')
@@ -156,7 +157,7 @@ axes[0].hist(college_data_selected['CONTROL'], bins=np.arange(1, 4)-0.5,
 axes[0].set_title('Distribution of Institutions by Control (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
-axes[1].hist(college_final['CONTROL'], bins=np.arange(1, 4)-0.5,
+axes[1].hist(college_data_selected['CONTROL'], bins=np.arange(1, 4)-0.5,
              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Control (Cleaned Data)')
 axes[1].set_xlabel('Control of Institution (1=Public, 2=Private Non-Profit, 3=Private For-Profit)')
@@ -200,9 +201,9 @@ plt.show()
 ## Correlation Matrix of Numerical Features
 
 ```{python}
-numerical_columns = college_final.select_dtypes(include=['number']).columns
+numerical_columns = college_data_selected.select_dtypes(include=['number']).columns
 plt.figure(figsize=(12, 10))
-correlation_matrix = college_final[numerical_columns].corr()
+correlation_matrix = college_data_selected[numerical_columns].corr()
 sns.heatmap(correlation_matrix, annot=False, fmt=".2f", cmap='coolwarm', cbar=True)
 plt.title('Correlation Matrix of Numerical Variables')
 plt.tight_layout()
