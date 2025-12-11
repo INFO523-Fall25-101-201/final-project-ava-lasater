@@ -12,11 +12,13 @@ website:
         href: index.qmd
       - text: Proposal
         href: proposal.qmd
+      - text: Report
+        href: report.qmd
       - text: Presentation
         href: presentation.qmd
       - text: About
         href: about.qmd
-
+      
 format:
   html:
     theme:

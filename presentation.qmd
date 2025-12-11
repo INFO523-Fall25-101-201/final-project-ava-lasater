@@ -205,19 +205,18 @@ college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/Col
 fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 # orginial distribution
 axes[0].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5,
-             edgecolor='black', color='steelblue')
+            edgecolor='black', color='steelblue')
 axes[0].set_title('Distribution of Institutions by Region (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
 axes[1].hist(college_final['REGION'], bins=np.arange(1, 10)-0.5,
-             edgecolor='black', color='indianred')
+            edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Region (Cleaned Data)')
 axes[1].set_xlabel('Region Code')
 axes[1].set_ylabel('Number of Institutions')
 axes[1].set_xticks(range(1, 10))
 plt.tight_layout()
 plt.show()
-
 ```
 ***
 
@@ -238,14 +237,14 @@ axes[0].set_title('Distribution of Institutions by Locale (Original Data)')
 axes[0].set_ylabel('Number of Institutions')
 # final distribution
 axes[1].hist(college_final['LOCALE'], bins=np.arange(11, 44)-0.5,
-             edgecolor='black', color='indianred')
+              edgecolor='black', color='indianred')
 axes[1].set_title('Distribution of Institutions by Locale (Cleaned Data)')
 axes[1].set_xlabel('Locale Code')
 axes[1].set_ylabel('Number of Institutions')
 axes[1].set_xticks(range(11, 44))
 plt.tight_layout()
 plt.show()
-
+                          
 ```
 
 ***

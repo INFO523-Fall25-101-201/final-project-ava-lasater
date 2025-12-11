@@ -9,7 +9,7 @@
 <meta name="author" content="Ava Lasater">
 <meta name="description" content="This project will analyze data from the U.S. Department of Education’s College Scorecard (https://collegescorecard.ed.gov/data/) to explore how institutional and financial factors influence student outcomes across U.S. colleges and universities. Specifically, it will investigate the relationship between cost of attendance and key outcome metrics such as retention rates and post-graduation earnings. The working hypothesis is that higher tuition combined with limited scholarship support is associated with lower student retention due to increased financial strain, while institutions with higher tuition may exhibit higher post-graduation earnings due to factors such as institutional prestige and resource availability. The financial burden associated with colllege is becoming increasingly heavy for young people, and I am very curious to see what the relationship with student outcomes.">
 
-<title>Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics – Project Title</title>
+<title>Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics – Predicting Post-Grad Earnings</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -4041,7 +4041,7 @@ vertical-align: -.125em;
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Project Title</span>
+    <span class="navbar-title">Predicting Post-Grad Earnings</span>
     </a>
   </div>
             <div id="quarto-search" class title="Search"></div>
@@ -4057,6 +4057,10 @@ vertical-align: -.125em;
   <li class="nav-item">
     <a class="nav-link active" href="./proposal.html" aria-current="page"> 
 <span class="menu-text">Proposal</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./report.html"> 
+<span class="menu-text">Report</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./presentation.html"> 
@@ -4138,16 +4142,20 @@ vertical-align: -.125em;
 </header>
 
 
-<div id="load-pkgs" class="cell" data-message="false" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <section id="dataset" class="level2">
 <h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
-<p>A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.</p>
-<p>Make sure to load the data and use inline code for some of this information.</p>
+<div id="load-dataset" class="cell" data-message="false" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv&#39;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="bu">print</span>(df.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(6903, 3306)</code></pre>
+</div>
+</div>
 <p>This data contains institution-level data files for 1996-97 through 2022-23 containing aggregate data for each institution. Includes information on institutional characteristics, enrollment, student aid, costs, and student outcomes. Field of study-level data files for the pooled 2014-15, 2015-16 award years through the pooled 2018-19, 2019-20 award years containing data at the credential level and 4-digit CIP code combination for each institution. Includes information on cumulative debt at graduation and earnings one year after graduation. Essentially, this dataset holds a lot of information that can be used to understand student success, university statistics, and demographic information.</p>
 <p>Initialy, this dataset contains 3306 columns, and 6430 rows. Since this file is too large to load directly into Github, I am working on solutions. Thus, I do have have robust numbers and have yet to clean and throw columns that I am not interested in. I will be retaining a lot of columns related to the cost of attendance, demographic information, and outcome metrics which indclude salary metric, retention percentages, etc.</p>
-<p>The main columns I will be considering are outlined below: - <strong>INSTNM</strong>: Institution name - <strong>STABBR</strong>: 2-letter state abbreviation - <strong>HIGHDEG</strong>: Highest degree awarded: 0 Non-degree-granting 1 Certificate degree 2 Associate degree 3 Bachelor’s degree 4 Graduate degree - <strong>PREDEG</strong>: Predominant undergraduate degree awarded: 0 Not classified 1 Predominantly certificate-degree granting 2 Predominantly associate’s-degree granting 3 Predominantly bachelor’s-degree granting 4 Entirely graduate-degree granting - <strong>CONTROL</strong>: Control of institution (IPEDS) (i.e. private, public) - <strong>COSTT4_A</strong>: Average cost of attendance (academic year institutions) - <strong>TUITIONFEE_IN</strong>: In-state tuition and fees - <strong>TUITIONFEE_OUT</strong>: Out-of-state tuition and fees - <strong>TUITFTE</strong>: Net tuition revenue per full-time equivalent student - <strong>C150_4</strong>: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion) - <strong>C150_4_POOLED</strong>: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion), pooled for two year rolling averages - <strong>RET_FT4</strong>: First-time, full-time student retention rate at four-year institutions - <strong>COMP_ORIG_YR4_RT</strong>: Percent completed within 4 years at original institution - <strong>COMP_ORIG_YR6_RT</strong>: Percent completed within 6 years at original institution - <strong>RPY_1YR_RT</strong>: Fraction of repayment cohort who are not in default, and with loan balances that have declined one year since entering repayment, excluding enrolled and military deferment from calculation. (Rolling averages) - <strong>DEP_INC_AVG</strong>: Average family income of dependent students in real 2015 dollars. - <strong>GRAD_DEBT_MDN</strong>: The median debt for students who have completed - <strong>COUNT_WNE_P10</strong>: Number of students working and not enrolled 10 years after entry - <strong>MD_EARN_WNE_P10</strong>: Median earnings of students working and not enrolled 10 years after entry - <strong>COUNT_WNE_INC1_P10</strong>: Number of students working and not enrolled 10 years after entry in the lowest income tercile $0-$30,000 - <strong>COUNT_WNE_P6</strong>: Mean earnings of students working and not enrolled 6 years after entry - <strong>MD_EARN_WNE_P6</strong>: Median earnings of students working and not enrolled 6 years after entry - <strong>COUNT_WNE_INC1_P6</strong>: Number of students working and not enrolled 6 years after entry in the lowest income tercile $0-$30,000</p>
+<p>The columns I used are outlined below: Cost Variables: - TUITIONFEE_IN: In-state tuition and fees - TUITIONFEE_OUT: Out-of-state tuition and fees - NPT4_PUB: Average net price for Title IV institutions (public institutions) - NPT4_PRIV: Average net price for Title IV institutions (private institutions) - NPT41_PUB: Average net price for $0-$30,000 family income (public institutions) - NPT42_PUB: Average net price for $30,001-$48,000 family income (public institutions) - NPT43_PUB: Average net price for $48,001-$75,000 family income (public institutions) - NPT44_PUB: Average net price for $75,001-$110,000 family income (public institutions) - NPT45_PUB: Average net price for $110,000+ family income (public institutions) - NPT41_PRIV: Average net price for $0-$30,000 family income (private institutions) - NPT42_PRIV: Average net price for $30,001-$48,000 family income (private institutions) - NPT43_PRIV: Average net price for $48,001-$75,000 family income (private institutions) - NPT44_PRIV: Average net price for $75,001-$110,000 family income (private institutions) - NPT45_PRIV: Average net price for $110,000+ family income (private institutions) - ST_FIPS: State FIPS code for regional analysis - REGION: Region code for regional analysis - LOCALE: Locale code for regional analysis - LOCALE2: Detailed locale code for regional analysis - BOOKSUPPLY: Average cost of books and supplies - ROOMBOARD_ON: Average cost of room and board for on-campus students - OTHEREXPENSE_ON: Average other expenses for on-campus students - ROOMBOARD_OFF: Average cost of room and board for off-campus students - OTHEREXPENSE_OFF: Average other expenses for off-campus students - OTHEREXPENSE_FAM: Average other expenses for students living with family</p>
+<p>School Prestige/Quality Variables: - INSTNM: Institution name - CITY: City where the institution is located - CONTROL: Control of institution (public, private non-profit, private for-profit) - PREDDEG: Predominant degree awarded - ADM_RATE: Admission rate - SAT_AVG: Average SAT score of admitted students - UGDS: Number of undergraduate students - PCTPELL: Percentage of undergraduate students receiving Pell Grants - PCTFLOAN: Percentage of undergraduate students receiving federal student loans - ENDOWBEGIN: Endowment at the beginning of the fiscal year - ENDOWEND: Endowment at the end of the fiscal year - STUFACR: Undergraduate student-to-faculty ratio</p>
+<p>Outcome Variables: - C150_4: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion) - RET_FT4: Retention rate for first-time, full-time students after four years - C200_4: Completion rate for first-time, full-time students at four-year institutions (200% of expected time to completion) - COMP_ORIG_YR4_RT: Completion rate for first-time, full-time students who received federal student aid within four years - COMP_ORIG_YR6_RT: Completion rate for first-time, full-time students who received federal student aid within six years - RPY_1YR_RT: Fraction of repayment cohort who are not in default, and with loan balances that have declined one year since entering repayment, excluding enrolled and military deferment from calculation. (Rolling averages) - COMPL_RPY_1YR_RT: One-year repayment rate for completers - GRAD_DEBT_MDN: The median debt for students who have completed - LO_INC_DEBT_MDN: The median debt for students with family income between $0-$30,000 - MD_INC_DEBT_MDN: The median debt for students with family income between $30,001-$75,000 - HI_INC_DEBT_MDN: The median debt for students with family income above $75,000 - MD_EARN_WNE_P10: Mean earnings of students working and not enrolled 10 years after entry - PCT10_EARN_WNE_P10: 10th percentile earnings of students working and not enrolled 10 years after entry - PCT25_EARN_WNE_P10: 25th percentile earnings of students working and not enrolled 10 years after entry - PCT75_EARN_WNE_P10: 75th percentile earnings of students working and not enrolled 10 years after entry - PCT90_EARN_WNE_P10: 90th percentile earnings of students working and not enrolled 10 years after entry - MD_EARN_WNE_P6: Mean earnings of students working and not enrolled 6 years after entry - PCT10_EARN_WNE_P6: 10th percentile earnings of students working and not enrolled 6 years after entry - PCT25_EARN_WNE_P6: 25th percentile earnings of students working and not enrolled 6 years after entry - PCT75_EARN_WNE_P6: 75th percentile earnings of students working and not enrolled 6 years after entry - PCT90_EARN_WNE_P6: 90th percentile earnings of students working and not enrolled 6 years after entry - C100_4: Completion rate for first-time, full-time students at four-year institutions (100% of expected time to completion)</p>
 <p>I chose this dataset because it allows me to directly link financial inputs (tuition and aid) with student outcomes (retention and earnings), helping to uncover whether affordability or institutional prestige has a stronger effect on student success. Additionally, this dataset holds so much interesting data, and I am interested in a lot of these columns. However, I will need to balance the number of columns I look at and the my main goals for the project.</p>
 </section>
 <section id="questions" class="level2">
@@ -4160,9 +4168,6 @@ vertical-align: -.125em;
 </section>
 <section id="analysis-plan" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-plan">Analysis plan</h2>
-<ul>
-<li>A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).</li>
-</ul>
 <p>To answer the first question, I will be looking at the average net prices and retention. There are multiple columns for each of these factors in the dataset. Next, there are several breakdowns concerning the percentage of student working after graduation. I will use this data and compare the type of institution and the tuition to see if there is a relationship. I plan on doing an EDA and determining which factors specifically I want to focus on, then I will perform a linear regression if that makes sense for the data, or other forms of quantitative analysis in order to determine a relationship.</p>
 
 
@@ -4674,131 +4679,151 @@ vertical-align: -.125em;
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="an">title:</span><span class="co"> &quot;Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics&quot;</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="an">subtitle:</span><span class="co"> &quot;Proposal&quot;</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="an">author:</span><span class="co"> </span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">  - name: &quot;Ava Lasater&quot;</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">    affiliations:</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">      - name: &quot;College of Information Science, University of Arizona&quot;</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="an">description:</span><span class="co"> &quot;This project will analyze data from the U.S. Department of Education’s College Scorecard </span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co">(https://collegescorecard.ed.gov/data/) to explore how institutional and financial factors influence student outcomes </span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co">across U.S. colleges and universities. Specifically, it will investigate the relationship between cost of attendance and </span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co">key outcome metrics such as retention rates and post-graduation earnings. The working hypothesis is that higher tuition </span></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co">combined with limited scholarship support is associated with lower student retention due to increased financial strain, </span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co">while institutions with higher tuition may exhibit higher post-graduation earnings due to factors such as institutional </span></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="co">prestige and resource availability. The financial burden associated with colllege is becoming increasingly heavy for young </span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="co">people, and I am very curious to see what the relationship with student outcomes. &quot;</span></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="an">format:</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="co">  html:</span></span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co">    code-tools: true</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="co">    code-line-numbers: true</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="co">    embed-resources: true</span></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="an">execute:</span></span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="co">  warning: false</span></span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="an">jupyter:</span><span class="co"> python3</span></span>
-<span id="cb2-27"><a href="#cb2-27"></a><span class="co">---</span></span>
-<span id="cb2-28"><a href="#cb2-28"></a></span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="in">```{python}</span></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co">#| label: load-pkgs</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co">#| message: false</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-35"><a href="#cb2-35"></a><span class="in">```</span></span>
-<span id="cb2-36"><a href="#cb2-36"></a></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="fu">## Dataset</span></span>
-<span id="cb2-38"><a href="#cb2-38"></a></span>
-<span id="cb2-41"><a href="#cb2-41"></a><span class="in">```{python}</span></span>
-<span id="cb2-42"><a href="#cb2-42"></a><span class="co">#| label: load-dataset</span></span>
-<span id="cb2-43"><a href="#cb2-43"></a><span class="co">#| message: false</span></span>
-<span id="cb2-44"><a href="#cb2-44"></a></span>
-<span id="cb2-45"><a href="#cb2-45"></a></span>
-<span id="cb2-46"><a href="#cb2-46"></a></span>
-<span id="cb2-47"><a href="#cb2-47"></a><span class="in">```</span></span>
-<span id="cb2-48"><a href="#cb2-48"></a></span>
-<span id="cb2-49"><a href="#cb2-49"></a>A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.</span>
-<span id="cb2-50"><a href="#cb2-50"></a></span>
-<span id="cb2-51"><a href="#cb2-51"></a>Make sure to load the data and use inline code for some of this information.</span>
-<span id="cb2-52"><a href="#cb2-52"></a></span>
-<span id="cb2-53"><a href="#cb2-53"></a>This data contains institution-level data files for 1996-97 through 2022-23 containing aggregate data for each institution. Includes information on </span>
-<span id="cb2-54"><a href="#cb2-54"></a>institutional characteristics, enrollment, student aid, costs, and student outcomes. Field of study-level data files for the pooled </span>
-<span id="cb2-55"><a href="#cb2-55"></a>2014-15, 2015-16 award years through the pooled 2018-19, 2019-20 award years containing data at the credential level and 4-digit </span>
-<span id="cb2-56"><a href="#cb2-56"></a>CIP code combination for each institution. Includes information on cumulative debt at graduation and earnings one year after graduation. Essentially,</span>
-<span id="cb2-57"><a href="#cb2-57"></a>this dataset holds a lot of information that can be used to understand student success, university statistics, and demographic information.</span>
-<span id="cb2-58"><a href="#cb2-58"></a></span>
-<span id="cb2-59"><a href="#cb2-59"></a>Initialy, this dataset contains 3306 columns, and 6430 rows. Since this file is too large to load directly into Github, I am </span>
-<span id="cb2-60"><a href="#cb2-60"></a>working on solutions. Thus, I do have have robust numbers and have yet to clean and throw columns that I am not interested in. I</span>
-<span id="cb2-61"><a href="#cb2-61"></a>will be retaining a lot of columns related to the cost of attendance, demographic information, and outcome metrics which indclude </span>
-<span id="cb2-62"><a href="#cb2-62"></a>salary metric, retention percentages, etc.</span>
-<span id="cb2-63"><a href="#cb2-63"></a></span>
-<span id="cb2-64"><a href="#cb2-64"></a>The main columns I will be considering are outlined below:</span>
-<span id="cb2-65"><a href="#cb2-65"></a><span class="ss">-   </span>**INSTNM**: Institution name</span>
-<span id="cb2-66"><a href="#cb2-66"></a><span class="ss">-   </span>**STABBR**: 2-letter state abbreviation</span>
-<span id="cb2-67"><a href="#cb2-67"></a><span class="ss">-   </span>**HIGHDEG**: Highest degree awarded:</span>
-<span id="cb2-68"><a href="#cb2-68"></a>        0 Non-degree-granting</span>
-<span id="cb2-69"><a href="#cb2-69"></a>        1 Certificate degree</span>
-<span id="cb2-70"><a href="#cb2-70"></a>        2 Associate degree</span>
-<span id="cb2-71"><a href="#cb2-71"></a>        3 Bachelor&#39;s degree</span>
-<span id="cb2-72"><a href="#cb2-72"></a>        4 Graduate degree</span>
-<span id="cb2-73"><a href="#cb2-73"></a><span class="ss">-   </span>**PREDEG**: Predominant undergraduate degree awarded:</span>
-<span id="cb2-74"><a href="#cb2-74"></a>        0 Not classified</span>
-<span id="cb2-75"><a href="#cb2-75"></a>        1 Predominantly certificate-degree granting</span>
-<span id="cb2-76"><a href="#cb2-76"></a>        2 Predominantly associate&#39;s-degree granting</span>
-<span id="cb2-77"><a href="#cb2-77"></a>        3 Predominantly bachelor&#39;s-degree granting</span>
-<span id="cb2-78"><a href="#cb2-78"></a>        4 Entirely graduate-degree granting</span>
-<span id="cb2-79"><a href="#cb2-79"></a><span class="ss">-   </span>**CONTROL**: Control of institution (IPEDS) (i.e. private, public)</span>
-<span id="cb2-80"><a href="#cb2-80"></a><span class="ss">-   </span>**COSTT4_A**: Average cost of attendance (academic year institutions)</span>
-<span id="cb2-81"><a href="#cb2-81"></a><span class="ss">-   </span>**TUITIONFEE_IN**: In-state tuition and fees</span>
-<span id="cb2-82"><a href="#cb2-82"></a><span class="ss">-   </span>**TUITIONFEE_OUT**: Out-of-state tuition and fees</span>
-<span id="cb2-83"><a href="#cb2-83"></a><span class="ss">-   </span>**TUITFTE**: Net tuition revenue per full-time equivalent student</span>
-<span id="cb2-84"><a href="#cb2-84"></a><span class="ss">-   </span>**C150_4**: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion)</span>
-<span id="cb2-85"><a href="#cb2-85"></a><span class="ss">-   </span>**C150_4_POOLED**: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion), pooled for two year rolling averages</span>
-<span id="cb2-86"><a href="#cb2-86"></a><span class="ss">-   </span>**RET_FT4**: First-time, full-time student retention rate at four-year institutions</span>
-<span id="cb2-87"><a href="#cb2-87"></a><span class="ss">-   </span>**COMP_ORIG_YR4_RT**: Percent completed within 4 years at original institution</span>
-<span id="cb2-88"><a href="#cb2-88"></a><span class="ss">-   </span>**COMP_ORIG_YR6_RT**: Percent completed within 6 years at original institution</span>
-<span id="cb2-89"><a href="#cb2-89"></a><span class="ss">-   </span>**RPY_1YR_RT**: Fraction of repayment cohort who are not in default, and with loan balances that have declined one year since entering repayment, excluding enrolled </span>
-<span id="cb2-90"><a href="#cb2-90"></a>        and military deferment from calculation. (Rolling averages)</span>
-<span id="cb2-91"><a href="#cb2-91"></a><span class="ss">-   </span>**DEP_INC_AVG**: Average family income of dependent students in real 2015 dollars.</span>
-<span id="cb2-92"><a href="#cb2-92"></a><span class="ss">-   </span>**GRAD_DEBT_MDN**: The median debt for students who have completed</span>
-<span id="cb2-93"><a href="#cb2-93"></a><span class="ss">-   </span>**COUNT_WNE_P10**: Number of students working and not enrolled 10 years after entry</span>
-<span id="cb2-94"><a href="#cb2-94"></a><span class="ss">-   </span>**MD_EARN_WNE_P10**: Median earnings of students working and not enrolled 10 years after entry</span>
-<span id="cb2-95"><a href="#cb2-95"></a><span class="ss">-   </span>**COUNT_WNE_INC1_P10**: Number of students working and not enrolled 10 years after entry in the lowest income tercile $0-$30,000</span>
-<span id="cb2-96"><a href="#cb2-96"></a><span class="ss">-   </span>**COUNT_WNE_P6**: Mean earnings of students working and not enrolled 6 years after entry</span>
-<span id="cb2-97"><a href="#cb2-97"></a><span class="ss">-   </span>**MD_EARN_WNE_P6**: Median earnings of students working and not enrolled 6 years after entry</span>
-<span id="cb2-98"><a href="#cb2-98"></a><span class="ss">-   </span>**COUNT_WNE_INC1_P6**: Number of students working and not enrolled 6 years after entry in the lowest income tercile $0-$30,000</span>
-<span id="cb2-99"><a href="#cb2-99"></a></span>
-<span id="cb2-100"><a href="#cb2-100"></a>I chose this dataset because it allows me to directly link financial inputs (tuition and aid) with student outcomes (retention </span>
-<span id="cb2-101"><a href="#cb2-101"></a>and earnings), helping to uncover whether affordability or institutional prestige has a stronger effect on student success. Additionally, this dataset holds so much</span>
-<span id="cb2-102"><a href="#cb2-102"></a>interesting data, and I am interested in a lot of these columns. However, I will need to balance the number of columns I look at and the my main goals for the project.</span>
-<span id="cb2-103"><a href="#cb2-103"></a></span>
-<span id="cb2-104"><a href="#cb2-104"></a></span>
-<span id="cb2-105"><a href="#cb2-105"></a></span>
-<span id="cb2-106"><a href="#cb2-106"></a><span class="fu">## Questions</span></span>
-<span id="cb2-107"><a href="#cb2-107"></a></span>
-<span id="cb2-108"><a href="#cb2-108"></a>The two questions you want to answer.</span>
-<span id="cb2-109"><a href="#cb2-109"></a></span>
-<span id="cb2-110"><a href="#cb2-110"></a><span class="ss">1. </span>How does average cost of attendance aid affects student retention rates at institutions with different tuition levels?</span>
-<span id="cb2-111"><a href="#cb2-111"></a></span>
-<span id="cb2-112"><a href="#cb2-112"></a><span class="ss">2. </span>Is there a relationship between institutional tuition and post-graduation earnings, and does this differ by institution </span>
-<span id="cb2-113"><a href="#cb2-113"></a>type (public, private nonprofit, for-profit)?</span>
-<span id="cb2-114"><a href="#cb2-114"></a></span>
-<span id="cb2-115"><a href="#cb2-115"></a><span class="fu">## Analysis plan</span></span>
-<span id="cb2-116"><a href="#cb2-116"></a></span>
-<span id="cb2-117"><a href="#cb2-117"></a><span class="ss">-   </span>A plan for answering each of the questions including the variables involved, variables to be created (if any), external </span>
-<span id="cb2-118"><a href="#cb2-118"></a>data to be merged in (if any).</span>
-<span id="cb2-119"><a href="#cb2-119"></a></span>
-<span id="cb2-120"><a href="#cb2-120"></a>To answer the first question, I will be looking at the average net prices and retention. There are multiple columns for each of these</span>
-<span id="cb2-121"><a href="#cb2-121"></a>factors in the dataset. Next, there are several breakdowns concerning the percentage of student working after graduation. I will use this </span>
-<span id="cb2-122"><a href="#cb2-122"></a>data and compare the type of institution and the tuition to see if there is a relationship. I plan on doing an EDA and determining which </span>
-<span id="cb2-123"><a href="#cb2-123"></a>factors specifically I want to focus on, then I will perform a linear regression if that makes sense for the data, or other forms of </span>
-<span id="cb2-124"><a href="#cb2-124"></a>quantitative analysis in order to determine a relationship.</span>
-<span id="cb2-125"><a href="#cb2-125"></a></span>
-<span id="cb2-126"><a href="#cb2-126"></a></span>
-<span id="cb2-127"><a href="#cb2-127"></a></span>
-<span id="cb2-128"><a href="#cb2-128"></a></span>
-<span id="cb2-129"><a href="#cb2-129"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">---</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="an">title:</span><span class="co"> &quot;Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="an">subtitle:</span><span class="co"> &quot;Proposal&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="an">author:</span><span class="co"> </span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">  - name: &quot;Ava Lasater&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">    affiliations:</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">      - name: &quot;College of Information Science, University of Arizona&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="an">description:</span><span class="co"> &quot;This project will analyze data from the U.S. Department of Education’s College Scorecard </span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">(https://collegescorecard.ed.gov/data/) to explore how institutional and financial factors influence student outcomes </span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">across U.S. colleges and universities. Specifically, it will investigate the relationship between cost of attendance and </span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">key outcome metrics such as retention rates and post-graduation earnings. The working hypothesis is that higher tuition </span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co">combined with limited scholarship support is associated with lower student retention due to increased financial strain, </span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="co">while institutions with higher tuition may exhibit higher post-graduation earnings due to factors such as institutional </span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co">prestige and resource availability. The financial burden associated with colllege is becoming increasingly heavy for young </span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">people, and I am very curious to see what the relationship with student outcomes. &quot;</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="an">format:</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">  html:</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">    code-tools: true</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="co">    embed-resources: true</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="an">execute:</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="co">  warning: false</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="an">jupyter:</span><span class="co"> python3</span></span>
+<span id="cb3-27"><a href="#cb3-27"></a><span class="co">---</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="in">```{python}</span></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="co">#| echo: false</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="co">#| label: load-pkgs</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="co">#| message: false</span></span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="in">```</span></span>
+<span id="cb3-38"><a href="#cb3-38"></a></span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="fu">## Dataset</span></span>
+<span id="cb3-40"><a href="#cb3-40"></a></span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="in">```{python}</span></span>
+<span id="cb3-44"><a href="#cb3-44"></a><span class="co">#| label: load-dataset</span></span>
+<span id="cb3-45"><a href="#cb3-45"></a><span class="co">#| message: false</span></span>
+<span id="cb3-46"><a href="#cb3-46"></a></span>
+<span id="cb3-47"><a href="#cb3-47"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv&#39;</span>)</span>
+<span id="cb3-48"><a href="#cb3-48"></a><span class="bu">print</span>(df.shape)</span>
+<span id="cb3-49"><a href="#cb3-49"></a></span>
+<span id="cb3-50"><a href="#cb3-50"></a><span class="in">```</span></span>
+<span id="cb3-51"><a href="#cb3-51"></a>This data contains institution-level data files for 1996-97 through 2022-23 containing aggregate data for each institution. Includes information on </span>
+<span id="cb3-52"><a href="#cb3-52"></a>institutional characteristics, enrollment, student aid, costs, and student outcomes. Field of study-level data files for the pooled </span>
+<span id="cb3-53"><a href="#cb3-53"></a>2014-15, 2015-16 award years through the pooled 2018-19, 2019-20 award years containing data at the credential level and 4-digit </span>
+<span id="cb3-54"><a href="#cb3-54"></a>CIP code combination for each institution. Includes information on cumulative debt at graduation and earnings one year after graduation. Essentially,</span>
+<span id="cb3-55"><a href="#cb3-55"></a>this dataset holds a lot of information that can be used to understand student success, university statistics, and demographic information.</span>
+<span id="cb3-56"><a href="#cb3-56"></a></span>
+<span id="cb3-57"><a href="#cb3-57"></a>Initialy, this dataset contains 3306 columns, and 6430 rows. Since this file is too large to load directly into Github, I am </span>
+<span id="cb3-58"><a href="#cb3-58"></a>working on solutions. Thus, I do have have robust numbers and have yet to clean and throw columns that I am not interested in. I</span>
+<span id="cb3-59"><a href="#cb3-59"></a>will be retaining a lot of columns related to the cost of attendance, demographic information, and outcome metrics which indclude </span>
+<span id="cb3-60"><a href="#cb3-60"></a>salary metric, retention percentages, etc.</span>
+<span id="cb3-61"><a href="#cb3-61"></a></span>
+<span id="cb3-62"><a href="#cb3-62"></a>The columns I used are outlined below:</span>
+<span id="cb3-63"><a href="#cb3-63"></a>Cost Variables:</span>
+<span id="cb3-64"><a href="#cb3-64"></a><span class="ss">- </span>TUITIONFEE_IN: In-state tuition and fees</span>
+<span id="cb3-65"><a href="#cb3-65"></a><span class="ss">- </span>TUITIONFEE_OUT: Out-of-state tuition and fees</span>
+<span id="cb3-66"><a href="#cb3-66"></a><span class="ss">- </span>NPT4_PUB: Average net price for Title IV institutions (public institutions)</span>
+<span id="cb3-67"><a href="#cb3-67"></a><span class="ss">- </span>NPT4_PRIV: Average net price for Title IV institutions (private institutions)</span>
+<span id="cb3-68"><a href="#cb3-68"></a><span class="ss">- </span>NPT41_PUB: Average net price for $0-$30,000 family income (public institutions)</span>
+<span id="cb3-69"><a href="#cb3-69"></a><span class="ss">- </span>NPT42_PUB: Average net price for $30,001-$48,000 family income (public institutions)</span>
+<span id="cb3-70"><a href="#cb3-70"></a><span class="ss">- </span>NPT43_PUB: Average net price for $48,001-$75,000 family income (public institutions)</span>
+<span id="cb3-71"><a href="#cb3-71"></a><span class="ss">- </span>NPT44_PUB: Average net price for $75,001-$110,000 family income (public institutions)</span>
+<span id="cb3-72"><a href="#cb3-72"></a><span class="ss">- </span>NPT45_PUB: Average net price for $110,000+ family income (public institutions)</span>
+<span id="cb3-73"><a href="#cb3-73"></a><span class="ss">- </span>NPT41_PRIV: Average net price for $0-$30,000 family income (private institutions)</span>
+<span id="cb3-74"><a href="#cb3-74"></a><span class="ss">- </span>NPT42_PRIV: Average net price for $30,001-$48,000 family income (private institutions)</span>
+<span id="cb3-75"><a href="#cb3-75"></a><span class="ss">- </span>NPT43_PRIV: Average net price for $48,001-$75,000 family income (private institutions)</span>
+<span id="cb3-76"><a href="#cb3-76"></a><span class="ss">- </span>NPT44_PRIV: Average net price for $75,001-$110,000 family income (private institutions)</span>
+<span id="cb3-77"><a href="#cb3-77"></a><span class="ss">- </span>NPT45_PRIV: Average net price for $110,000+ family income (private institutions)</span>
+<span id="cb3-78"><a href="#cb3-78"></a><span class="ss">- </span>ST_FIPS: State FIPS code for regional analysis</span>
+<span id="cb3-79"><a href="#cb3-79"></a><span class="ss">- </span>REGION: Region code for regional analysis</span>
+<span id="cb3-80"><a href="#cb3-80"></a><span class="ss">- </span>LOCALE: Locale code for regional analysis</span>
+<span id="cb3-81"><a href="#cb3-81"></a><span class="ss">- </span>LOCALE2: Detailed locale code for regional analysis</span>
+<span id="cb3-82"><a href="#cb3-82"></a><span class="ss">- </span>BOOKSUPPLY: Average cost of books and supplies</span>
+<span id="cb3-83"><a href="#cb3-83"></a><span class="ss">- </span>ROOMBOARD_ON: Average cost of room and board for on-campus students</span>
+<span id="cb3-84"><a href="#cb3-84"></a><span class="ss">- </span>OTHEREXPENSE_ON: Average other expenses for on-campus students</span>
+<span id="cb3-85"><a href="#cb3-85"></a><span class="ss">- </span>ROOMBOARD_OFF: Average cost of room and board for off-campus students</span>
+<span id="cb3-86"><a href="#cb3-86"></a><span class="ss">- </span>OTHEREXPENSE_OFF: Average other expenses for off-campus students</span>
+<span id="cb3-87"><a href="#cb3-87"></a><span class="ss">- </span>OTHEREXPENSE_FAM: Average other expenses for students living with family</span>
+<span id="cb3-88"><a href="#cb3-88"></a></span>
+<span id="cb3-89"><a href="#cb3-89"></a>School Prestige/Quality Variables:</span>
+<span id="cb3-90"><a href="#cb3-90"></a><span class="ss">- </span>INSTNM: Institution name</span>
+<span id="cb3-91"><a href="#cb3-91"></a><span class="ss">- </span>CITY: City where the institution is located</span>
+<span id="cb3-92"><a href="#cb3-92"></a><span class="ss">- </span>CONTROL: Control of institution (public, private non-profit, private for-profit)</span>
+<span id="cb3-93"><a href="#cb3-93"></a><span class="ss">- </span>PREDDEG: Predominant degree awarded</span>
+<span id="cb3-94"><a href="#cb3-94"></a><span class="ss">- </span>ADM_RATE: Admission rate</span>
+<span id="cb3-95"><a href="#cb3-95"></a><span class="ss">- </span>SAT_AVG: Average SAT score of admitted students</span>
+<span id="cb3-96"><a href="#cb3-96"></a><span class="ss">- </span>UGDS: Number of undergraduate students</span>
+<span id="cb3-97"><a href="#cb3-97"></a><span class="ss">- </span>PCTPELL: Percentage of undergraduate students receiving Pell Grants</span>
+<span id="cb3-98"><a href="#cb3-98"></a><span class="ss">- </span>PCTFLOAN: Percentage of undergraduate students receiving federal student loans</span>
+<span id="cb3-99"><a href="#cb3-99"></a><span class="ss">- </span>ENDOWBEGIN: Endowment at the beginning of the fiscal year</span>
+<span id="cb3-100"><a href="#cb3-100"></a><span class="ss">- </span>ENDOWEND: Endowment at the end of the fiscal year</span>
+<span id="cb3-101"><a href="#cb3-101"></a><span class="ss">- </span>STUFACR: Undergraduate student-to-faculty ratio   </span>
+<span id="cb3-102"><a href="#cb3-102"></a></span>
+<span id="cb3-103"><a href="#cb3-103"></a>Outcome Variables:</span>
+<span id="cb3-104"><a href="#cb3-104"></a><span class="ss">- </span>C150_4: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion)</span>
+<span id="cb3-105"><a href="#cb3-105"></a><span class="ss">- </span>RET_FT4: Retention rate for first-time, full-time students after four years</span>
+<span id="cb3-106"><a href="#cb3-106"></a><span class="ss">- </span>C200_4: Completion rate for first-time, full-time students at four-year institutions (200% of expected time to completion)</span>
+<span id="cb3-107"><a href="#cb3-107"></a><span class="ss">- </span>COMP_ORIG_YR4_RT: Completion rate for first-time, full-time students who received federal student aid within four years</span>
+<span id="cb3-108"><a href="#cb3-108"></a><span class="ss">- </span>COMP_ORIG_YR6_RT: Completion rate for first-time, full-time students who received federal student aid within six years</span>
+<span id="cb3-109"><a href="#cb3-109"></a><span class="ss">- </span>RPY_1YR_RT: Fraction of repayment cohort who are not in default, and with loan balances that have declined one year since entering repayment, excluding enrolled and military deferment from calculation. (Rolling averages)</span>
+<span id="cb3-110"><a href="#cb3-110"></a><span class="ss">- </span>COMPL_RPY_1YR_RT: One-year repayment rate for completers</span>
+<span id="cb3-111"><a href="#cb3-111"></a><span class="ss">- </span>GRAD_DEBT_MDN: The median debt for students who have completed</span>
+<span id="cb3-112"><a href="#cb3-112"></a><span class="ss">- </span>LO_INC_DEBT_MDN: The median debt for students with family income between $0-$30,000</span>
+<span id="cb3-113"><a href="#cb3-113"></a><span class="ss">- </span>MD_INC_DEBT_MDN: The median debt for students with family income between $30,001-$75,000</span>
+<span id="cb3-114"><a href="#cb3-114"></a><span class="ss">- </span>HI_INC_DEBT_MDN: The median debt for students with family income above $75,000</span>
+<span id="cb3-115"><a href="#cb3-115"></a><span class="ss">- </span>MD_EARN_WNE_P10: Mean earnings of students working and not enrolled 10 years after entry</span>
+<span id="cb3-116"><a href="#cb3-116"></a><span class="ss">- </span>PCT10_EARN_WNE_P10: 10th percentile earnings of students working and not enrolled 10 years after entry</span>
+<span id="cb3-117"><a href="#cb3-117"></a><span class="ss">- </span>PCT25_EARN_WNE_P10: 25th percentile earnings of students working and not enrolled 10 years after entry</span>
+<span id="cb3-118"><a href="#cb3-118"></a><span class="ss">- </span>PCT75_EARN_WNE_P10: 75th percentile earnings of students working and not enrolled 10 years after entry</span>
+<span id="cb3-119"><a href="#cb3-119"></a><span class="ss">- </span>PCT90_EARN_WNE_P10: 90th percentile earnings of students working and not enrolled 10 years after entry</span>
+<span id="cb3-120"><a href="#cb3-120"></a><span class="ss">- </span>MD_EARN_WNE_P6: Mean earnings of students working and not enrolled 6 years after entry</span>
+<span id="cb3-121"><a href="#cb3-121"></a><span class="ss">- </span>PCT10_EARN_WNE_P6: 10th percentile earnings of students working and not enrolled 6 years after entry</span>
+<span id="cb3-122"><a href="#cb3-122"></a><span class="ss">- </span>PCT25_EARN_WNE_P6: 25th percentile earnings of students working and not enrolled 6 years after entry</span>
+<span id="cb3-123"><a href="#cb3-123"></a><span class="ss">- </span>PCT75_EARN_WNE_P6: 75th percentile earnings of students working and not enrolled 6 years after entry</span>
+<span id="cb3-124"><a href="#cb3-124"></a><span class="ss">- </span>PCT90_EARN_WNE_P6: 90th percentile earnings of students working and not enrolled 6 years after entry</span>
+<span id="cb3-125"><a href="#cb3-125"></a><span class="ss">- </span>C100_4: Completion rate for first-time, full-time students at four-year institutions (100% of expected time to completion)</span>
+<span id="cb3-126"><a href="#cb3-126"></a></span>
+<span id="cb3-127"><a href="#cb3-127"></a>I chose this dataset because it allows me to directly link financial inputs (tuition and aid) with student outcomes (retention </span>
+<span id="cb3-128"><a href="#cb3-128"></a>and earnings), helping to uncover whether affordability or institutional prestige has a stronger effect on student success. Additionally, this dataset holds so much</span>
+<span id="cb3-129"><a href="#cb3-129"></a>interesting data, and I am interested in a lot of these columns. However, I will need to balance the number of columns I look at and the my main goals for the project.</span>
+<span id="cb3-130"><a href="#cb3-130"></a></span>
+<span id="cb3-131"><a href="#cb3-131"></a></span>
+<span id="cb3-132"><a href="#cb3-132"></a></span>
+<span id="cb3-133"><a href="#cb3-133"></a><span class="fu">## Questions</span></span>
+<span id="cb3-134"><a href="#cb3-134"></a></span>
+<span id="cb3-135"><a href="#cb3-135"></a>The two questions you want to answer.</span>
+<span id="cb3-136"><a href="#cb3-136"></a></span>
+<span id="cb3-137"><a href="#cb3-137"></a><span class="ss">1. </span>How does average cost of attendance aid affects student retention rates at institutions with different tuition levels?</span>
+<span id="cb3-138"><a href="#cb3-138"></a></span>
+<span id="cb3-139"><a href="#cb3-139"></a><span class="ss">2. </span>Is there a relationship between institutional tuition and post-graduation earnings, and does this differ by institution </span>
+<span id="cb3-140"><a href="#cb3-140"></a>type (public, private nonprofit, for-profit)?</span>
+<span id="cb3-141"><a href="#cb3-141"></a></span>
+<span id="cb3-142"><a href="#cb3-142"></a><span class="fu">## Analysis plan</span></span>
+<span id="cb3-143"><a href="#cb3-143"></a></span>
+<span id="cb3-144"><a href="#cb3-144"></a>To answer the first question, I will be looking at the average net prices and retention. There are multiple columns for each of these</span>
+<span id="cb3-145"><a href="#cb3-145"></a>factors in the dataset. Next, there are several breakdowns concerning the percentage of student working after graduation. I will use this </span>
+<span id="cb3-146"><a href="#cb3-146"></a>data and compare the type of institution and the tuition to see if there is a relationship. I plan on doing an EDA and determining which </span>
+<span id="cb3-147"><a href="#cb3-147"></a>factors specifically I want to focus on, then I will perform a linear regression if that makes sense for the data, or other forms of </span>
+<span id="cb3-148"><a href="#cb3-148"></a>quantitative analysis in order to determine a relationship.</span>
+<span id="cb3-149"><a href="#cb3-149"></a></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

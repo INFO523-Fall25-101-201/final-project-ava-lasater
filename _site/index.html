@@ -4059,6 +4059,10 @@ vertical-align: -.125em;
 <span class="menu-text">Proposal</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./report.html"> 
+<span class="menu-text">Report</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./presentation.html"> 
 <span class="menu-text">Presentation</span></a>
   </li>  
@@ -4091,8 +4095,6 @@ vertical-align: -.125em;
    
   <ul>
   <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#data-preprocessing" id="toc-data-preprocessing" class="nav-link" data-scroll-target="#data-preprocessing">Data Preprocessing</a></li>
   </ul>
 </nav>
     </div>
@@ -4145,19 +4147,73 @@ vertical-align: -.125em;
 <p>A classification task reframes the problem by labeling institutions as high-earning or low-earning relative to the sample median. Feature selection using statistical tests, random forest importance, and permutation importance identifies a consistent set of influential predictors, including enrollment size, retention, completion, tuition, and Pell share. Logistic regression and random forest models are then trained on the selected feature set. Both models achieve strong performance, with F1 scores around 0.77–0.82. Calibration curves show that each model produces reasonably reliable probability estimates, with logistic regression slightly smoother and more aligned with observed frequencies.</p>
 <p>Overall, the results suggest that while tuition contributes to differences in earnings, institutional performance indicators and student composition play a larger role. Earnings outcomes reflect a combination of institutional characteristics and the demographic and academic profile of the students they serve, highlighting the complexity of evaluating value in higher education.</p>
 <hr>
+<section id="research-questions" class="level4">
+<h4 class="anchored" data-anchor-id="research-questions">Research Questions</h4>
+<p>How do tuition and financial burden relate to student retention and post-graduation earnings?</p>
+<p>Which institutional characteristics (e.g., region, locale, control, enrollment size) most strongly predict earnings outcomes?</p>
+<p>Can institutional features be used to classify colleges into high-earning and low-earning groups?</p>
+<p>Which features provide the strongest predictive signal across linear and machine-learning models?</p>
 </section>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The rising cost of higher education in the United States has intensified concerns about whether attending college is worth it for students. Families increasingly weigh tuition, financial aid, and borrowing against expected earnings after graduation, yet the relationships between these factors and long-term outcomes are complex and difficult to observe directly. This project uses the U.S. Department of Education’s College Scorecard dataset to investigate how institutional cost, student composition, and academic performance are associated with post-graduation earnings.</p>
-<p>The analysis focuses on bachelor’s-degree-granting institutions and examines three main domains: cost of attendance (tuition and student debt), institutional characteristics (enrollment, sector, region, and locale), and student outcomes (retention, completion, and earnings). Two complementary modeling strategies are used. First, linear and penalized regression models estimate how these factors relate to median earnings ten years after enrollment. Second, logistic regression and random forest classifiers predict whether an institution falls above or below the sample median earnings level and identify which features are most important for classification. The goal is not to make causal claims, but to characterize patterns in the data and highlight which institutional features are most strongly associated with economic outcomes for graduates.</p>
-<hr>
+<section id="methods-used" class="level4">
+<h4 class="anchored" data-anchor-id="methods-used">Methods Used</h4>
+<section id="preprocessing" class="level5">
+<h5 class="anchored" data-anchor-id="preprocessing">Preprocessing</h5>
+<ul>
+<li>Combined split CSV filed due to GitHub upload limits</li>
+<li>Filtered to primarily bachelor’s degree-granting schools</li>
+<li>Removed columns with high missingness</li>
+<li>Scaled and log-transformed select variables</li>
+<li>One-hot encoded region, locale, and control categories</li>
+</ul>
 </section>
-<section id="data-preprocessing" class="level2">
-<h2 class="anchored" data-anchor-id="data-preprocessing">Data Preprocessing</h2>
+<section id="eda" class="level5">
+<h5 class="anchored" data-anchor-id="eda">EDA</h5>
+<ul>
+<li>Historgrams of all numeric variables</li>
+<li>Correlation heatmap</li>
+<li>Distribution checks of region, state, locale, and control</li>
+<li>Identification of skewed variables and outliers</li>
+</ul>
+</section>
+<section id="regression-models" class="level5">
+<h5 class="anchored" data-anchor-id="regression-models">Regression Models</h5>
+<ul>
+<li>Multiple Linear Regression</li>
+<li>Ridge Regression</li>
+<li>Diagnoistic plots</li>
+</ul>
+</section>
+<section id="classification-models" class="level5">
+<h5 class="anchored" data-anchor-id="classification-models">Classification Models</h5>
+<ul>
+<li>Feature selection using SelectKBest</li>
+<li>Random forest feature importance</li>
+<li>Permutation importance (self-taught extension)</li>
+<li>Logistic Regression</li>
+<li>Random Forest Classifier</li>
+<li>Evaluation plots (self-taught extension)</li>
+</ul>
+</section>
+</section>
+<section id="key-findings" class="level4">
+<h4 class="anchored" data-anchor-id="key-findings">Key Findings</h4>
+<ul>
+<li>Tuition has a positive but moderate association with long-term earnings.</li>
+<li>Retention and completion rates are among the strongest predictors of earnings.</li>
+<li>Pell Grant percentage is strongly negatively associated with earnings, reflecting socioeconomic patterns.</li>
+<li>Classification models achieve 77–82% accuracy.</li>
+<li>Institution size (UGDS), retention, completion, tuition, and socioeconomic mix provide the strongest predictive signal.</li>
+<li>Locale categories and school control type add minimal predictive value once other variables are included.</li>
+</ul>
+</section>
+<section id="data-source" class="level4">
+<h4 class="anchored" data-anchor-id="data-source">Data Source</h4>
+<p>U.S. Department of Education, Office of Federal Student Aid. College Scorecard Data. https://collegescorecard.ed.gov/data/</p>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -4731,61 +4787,94 @@ vertical-align: -.125em;
 <span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="fu">## Abstract</span></span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>Increasing concern about the cost and value of higher education has increased interest in understanding how institutional characteristics, and cost relate to student outcomes, particularly earning after graduation. This project uses institution-level data from the U.S. Department of Education’s College Scorecard to investigate how tuition, institutional features, and student enrollment are associated with median earnings 10 years after enrollment. Additionally, it aims to assess the extent to which these variables can predict higher-earning graduates. </span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data in Python</span></span>
 <span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>The dataset is restricted to institutions that primarily award bachelor’s degrees, and report complete information on 10-year earnings and core cost and outcome variables. After filtering and cleaning, the resulting sample retains a diverse set of institutions across regions, control types, and locale categories. To model earnings as a continuous outcome, the project applies both ordinary least squares (OLS) and Ridge regression. The OLS model explains a substantial portion of the variation in 10-year earnings, with retention, completion, and in-state tuition emerging as strong positive predictors, and median debt and Pell share showing negative associations. Ridge regression provides comparable predictive accuracy while better handling multicollinearity among financial variables.</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>college_data <span class="op">=</span> pd.read_csv(<span class="st">&#39;/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv&#39;</span>)</span>
 <span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>A classification task reframes the problem by labeling institutions as high-earning or low-earning relative to the sample median. Feature selection using statistical tests, random forest importance, and permutation importance identifies a consistent set of influential predictors, including enrollment size, retention, completion, tuition, and Pell share. Logistic regression and random forest models are then trained on the selected feature set. Both models achieve strong performance, with F1 scores around 0.77–0.82. Calibration curves show that each model produces reasonably reliable probability estimates, with logistic regression slightly smoother and more aligned with observed frequencies.</span>
-<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>Overall, the results suggest that while tuition contributes to differences in earnings, institutional performance indicators and student composition play a larger role. Earnings outcomes reflect a combination of institutional characteristics and the demographic and academic profile of the students they serve, highlighting the complexity of evaluating value in higher education.</span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>***</span>
-<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction</span></span>
-<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>The rising cost of higher education in the United States has intensified concerns about whether attending college is worth it for students. Families increasingly weigh tuition, financial aid, and borrowing against expected earnings after graduation, yet the relationships between these factors and long-term outcomes are complex and difficult to observe directly. This project uses the U.S. Department of Education’s College Scorecard dataset to investigate how institutional cost, student composition, and academic performance are associated with post-graduation earnings.</span>
-<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>The analysis focuses on bachelor’s-degree-granting institutions and examines three main domains: cost of attendance (tuition and student debt), institutional characteristics (enrollment, sector, region, and locale), and student outcomes (retention, completion, and earnings). Two complementary modeling strategies are used. First, linear and penalized regression models estimate how these factors relate to median earnings ten years after enrollment. Second, logistic regression and random forest classifiers predict whether an institution falls above or below the sample median earnings level and identify which features are most important for classification. The goal is not to make causal claims, but to characterize patterns in the data and highlight which institutional features are most strongly associated with economic outcomes for graduates.</span>
-<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>***</span>
-<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Preprocessing</span></span>
-<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: load-data</span></span>
-<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data in Python</span></span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>college_data <span class="op">=</span> pd.read_csv(<span class="st">&#39;/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv&#39;</span>)</span>
-<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>college_data_ND <span class="op">=</span> college_data.drop_duplicates()</span>
-<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>selected_columns <span class="op">=</span> [<span class="st">&#39;TUITIONFEE_IN&#39;</span>, <span class="st">&#39;TUITIONFEE_OUT&#39;</span>, <span class="st">&#39;NPT4_PUB&#39;</span>, <span class="st">&#39;NPT4_PRIV&#39;</span>, <span class="st">&#39;NPT41_PUB&#39;</span>, <span class="st">&#39;NPT42_PUB&#39;</span>, <span class="st">&#39;NPT43_PUB&#39;</span>, <span class="st">&#39;NPT44_PUB&#39;</span>, <span class="st">&#39;NPT45_PUB&#39;</span>,</span>
-<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;NPT41_PRIV&#39;</span>, <span class="st">&#39;NPT42_PRIV&#39;</span>, <span class="st">&#39;NPT43_PRIV&#39;</span>, <span class="st">&#39;NPT44_PRIV&#39;</span>, <span class="st">&#39;NPT45_PRIV&#39;</span>, <span class="st">&#39;ST_FIPS&#39;</span>, <span class="st">&#39;REGION&#39;</span>, <span class="st">&#39;LOCALE&#39;</span>, <span class="st">&#39;BOOKSUPPLY&#39;</span>, <span class="st">&#39;ROOMBOARD_ON&#39;</span>, <span class="st">&#39;OTHEREXPENSE_ON&#39;</span>,</span>
-<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;ROOMBOARD_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_FAM&#39;</span>, <span class="st">&#39;CONTROL&#39;</span>, <span class="st">&#39;PREDDEG&#39;</span>, <span class="st">&#39;ADM_RATE&#39;</span>, <span class="st">&#39;UGDS&#39;</span>,  <span class="st">&#39;LOCALE2&#39;</span>,</span>
-<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;PCTPELL&#39;</span>, <span class="st">&#39;PCTFLOAN&#39;</span>,  <span class="st">&#39;ENDOWBEGIN&#39;</span>, <span class="st">&#39;ENDOWEND&#39;</span>, <span class="st">&#39;STUFACR&#39;</span>, <span class="st">&#39;SAT_AVG&#39;</span>,</span>
-<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;C150_4&#39;</span>, <span class="st">&#39;COMP_ORIG_YR4_RT&#39;</span>,  <span class="st">&#39;COMP_ORIG_YR6_RT&#39;</span>,</span>
-<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;RPY_1YR_RT&#39;</span>,  <span class="st">&#39;COMPL_RPY_1YR_RT&#39;</span>,  <span class="st">&#39;GRAD_DEBT_MDN&#39;</span>,  <span class="st">&#39;LO_INC_DEBT_MDN&#39;</span>,</span>
-<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;MD_INC_DEBT_MDN&#39;</span>,  <span class="st">&#39;HI_INC_DEBT_MDN&#39;</span>,  <span class="st">&#39;MD_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT10_EARN_WNE_P10&#39;</span>,</span>
-<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;PCT25_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT75_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;MD_EARN_WNE_P6&#39;</span>,</span>
-<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;PCT10_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT25_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT75_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;C100_4&#39;</span>, <span class="st">&#39;INSTNM&#39;</span>, <span class="st">&#39;CITY&#39;</span>, <span class="st">&#39;RET_FT4&#39;</span>, <span class="st">&#39;C200_4&#39;</span>] </span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>college_data_ND <span class="op">=</span> college_data.drop_duplicates()</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>selected_columns <span class="op">=</span> [<span class="st">&#39;TUITIONFEE_IN&#39;</span>, <span class="st">&#39;TUITIONFEE_OUT&#39;</span>, <span class="st">&#39;NPT4_PUB&#39;</span>, <span class="st">&#39;NPT4_PRIV&#39;</span>, <span class="st">&#39;NPT41_PUB&#39;</span>, <span class="st">&#39;NPT42_PUB&#39;</span>, <span class="st">&#39;NPT43_PUB&#39;</span>, <span class="st">&#39;NPT44_PUB&#39;</span>, <span class="st">&#39;NPT45_PUB&#39;</span>,</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;NPT41_PRIV&#39;</span>, <span class="st">&#39;NPT42_PRIV&#39;</span>, <span class="st">&#39;NPT43_PRIV&#39;</span>, <span class="st">&#39;NPT44_PRIV&#39;</span>, <span class="st">&#39;NPT45_PRIV&#39;</span>, <span class="st">&#39;ST_FIPS&#39;</span>, <span class="st">&#39;REGION&#39;</span>, <span class="st">&#39;LOCALE&#39;</span>, <span class="st">&#39;BOOKSUPPLY&#39;</span>, <span class="st">&#39;ROOMBOARD_ON&#39;</span>, <span class="st">&#39;OTHEREXPENSE_ON&#39;</span>,</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;ROOMBOARD_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_FAM&#39;</span>, <span class="st">&#39;CONTROL&#39;</span>, <span class="st">&#39;PREDDEG&#39;</span>, <span class="st">&#39;ADM_RATE&#39;</span>, <span class="st">&#39;UGDS&#39;</span>,  <span class="st">&#39;LOCALE2&#39;</span>,</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;PCTPELL&#39;</span>, <span class="st">&#39;PCTFLOAN&#39;</span>,  <span class="st">&#39;ENDOWBEGIN&#39;</span>, <span class="st">&#39;ENDOWEND&#39;</span>, <span class="st">&#39;STUFACR&#39;</span>, <span class="st">&#39;SAT_AVG&#39;</span>,</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;C150_4&#39;</span>, <span class="st">&#39;COMP_ORIG_YR4_RT&#39;</span>,  <span class="st">&#39;COMP_ORIG_YR6_RT&#39;</span>,</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;RPY_1YR_RT&#39;</span>,  <span class="st">&#39;COMPL_RPY_1YR_RT&#39;</span>,  <span class="st">&#39;GRAD_DEBT_MDN&#39;</span>,  <span class="st">&#39;LO_INC_DEBT_MDN&#39;</span>,</span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;MD_INC_DEBT_MDN&#39;</span>,  <span class="st">&#39;HI_INC_DEBT_MDN&#39;</span>,  <span class="st">&#39;MD_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT10_EARN_WNE_P10&#39;</span>,</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;PCT25_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT75_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;MD_EARN_WNE_P6&#39;</span>,</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;PCT10_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT25_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT75_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;C100_4&#39;</span>, <span class="st">&#39;INSTNM&#39;</span>, <span class="st">&#39;CITY&#39;</span>, <span class="st">&#39;RET_FT4&#39;</span>, <span class="st">&#39;C200_4&#39;</span>] </span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>college_data_selected <span class="op">=</span> college_data_ND[selected_columns]</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>college_data_selected <span class="op">=</span> college_data_selected[college_data_ND[<span class="st">&#39;PREDDEG&#39;</span>] <span class="op">==</span> <span class="dv">3</span>]</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>should_be_numeric_columns <span class="op">=</span> [<span class="st">&#39;COMP_ORIG_YR4_RT&#39;</span>,  <span class="st">&#39;COMP_ORIG_YR6_RT&#39;</span>,</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;GRAD_DEBT_MDN&#39;</span>,  <span class="st">&#39;LO_INC_DEBT_MDN&#39;</span>,</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;MD_INC_DEBT_MDN&#39;</span>,  <span class="st">&#39;HI_INC_DEBT_MDN&#39;</span>,</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;PCT10_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P10&#39;</span>,</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;PCT10_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P6&#39;</span>]</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> should_be_numeric_columns:</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>    college_data_selected[col] <span class="op">=</span> pd.to_numeric(college_data_selected[col], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>) </span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>college_data_selected_v2 <span class="op">=</span> college_data_selected.drop(columns<span class="op">=</span>[<span class="st">&#39;NPT41_PUB&#39;</span>, <span class="st">&#39;NPT42_PUB&#39;</span>, <span class="st">&#39;NPT43_PUB&#39;</span>, <span class="st">&#39;NPT44_PUB&#39;</span>, <span class="st">&#39;NPT45_PUB&#39;</span>,</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;NPT41_PRIV&#39;</span>, <span class="st">&#39;NPT42_PRIV&#39;</span>, <span class="st">&#39;NPT43_PRIV&#39;</span>, <span class="st">&#39;NPT44_PRIV&#39;</span>, <span class="st">&#39;NPT45_PRIV&#39;</span>, <span class="st">&#39;NPT4_PUB&#39;</span>, <span class="st">&#39;NPT4_PRIV&#39;</span>, <span class="st">&#39;LOCALE2&#39;</span>,</span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;ROOMBOARD_ON&#39;</span>, <span class="st">&#39;OTHEREXPENSE_ON&#39;</span>, <span class="st">&#39;ROOMBOARD_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_FAM&#39;</span>, <span class="st">&#39;BOOKSUPPLY&#39;</span>, </span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;ENDOWBEGIN&#39;</span>, <span class="st">&#39;ENDOWEND&#39;</span>, <span class="st">&#39;ADM_RATE&#39;</span>, <span class="st">&#39;RPY_1YR_RT&#39;</span>, <span class="st">&#39;COMPL_RPY_1YR_RT&#39;</span>, <span class="st">&#39;SAT_AVG&#39;</span>, <span class="st">&#39;PREDDEG&#39;</span>])</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>college_final <span class="op">=</span> college_data_selected_v2.dropna()</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a><span class="fu">## Abstract</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>Increasing concern about the cost and value of higher education has increased interest in understanding how institutional characteristics, and cost relate to student outcomes, particularly earning after graduation. This project uses institution-level data from the U.S. Department of Education’s College Scorecard to investigate how tuition, institutional features, and student enrollment are associated with median earnings 10 years after enrollment. Additionally, it aims to assess the extent to which these variables can predict higher-earning graduates. </span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>The dataset is restricted to institutions that primarily award bachelor’s degrees, and report complete information on 10-year earnings and core cost and outcome variables. After filtering and cleaning, the resulting sample retains a diverse set of institutions across regions, control types, and locale categories. To model earnings as a continuous outcome, the project applies both ordinary least squares (OLS) and Ridge regression. The OLS model explains a substantial portion of the variation in 10-year earnings, with retention, completion, and in-state tuition emerging as strong positive predictors, and median debt and Pell share showing negative associations. Ridge regression provides comparable predictive accuracy while better handling multicollinearity among financial variables.</span>
 <span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>college_data_selected <span class="op">=</span> college_data_ND[selected_columns]</span>
-<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>college_data_selected <span class="op">=</span> college_data_selected[college_data_ND[<span class="st">&#39;PREDDEG&#39;</span>] <span class="op">==</span> <span class="dv">3</span>]</span>
-<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>should_be_numeric_columns <span class="op">=</span> [<span class="st">&#39;COMP_ORIG_YR4_RT&#39;</span>,  <span class="st">&#39;COMP_ORIG_YR6_RT&#39;</span>,</span>
-<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;GRAD_DEBT_MDN&#39;</span>,  <span class="st">&#39;LO_INC_DEBT_MDN&#39;</span>,</span>
-<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;MD_INC_DEBT_MDN&#39;</span>,  <span class="st">&#39;HI_INC_DEBT_MDN&#39;</span>,</span>
-<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;PCT10_EARN_WNE_P10&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P10&#39;</span>,</span>
-<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&#39;PCT10_EARN_WNE_P6&#39;</span>,  <span class="st">&#39;PCT90_EARN_WNE_P6&#39;</span>]</span>
-<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> should_be_numeric_columns:</span>
-<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>    college_data_selected[col] <span class="op">=</span> pd.to_numeric(college_data_selected[col], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>) </span>
-<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>college_data_selected_v2 <span class="op">=</span> college_data_selected.drop(columns<span class="op">=</span>[<span class="st">&#39;NPT41_PUB&#39;</span>, <span class="st">&#39;NPT42_PUB&#39;</span>, <span class="st">&#39;NPT43_PUB&#39;</span>, <span class="st">&#39;NPT44_PUB&#39;</span>, <span class="st">&#39;NPT45_PUB&#39;</span>,</span>
-<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;NPT41_PRIV&#39;</span>, <span class="st">&#39;NPT42_PRIV&#39;</span>, <span class="st">&#39;NPT43_PRIV&#39;</span>, <span class="st">&#39;NPT44_PRIV&#39;</span>, <span class="st">&#39;NPT45_PRIV&#39;</span>, <span class="st">&#39;NPT4_PUB&#39;</span>, <span class="st">&#39;NPT4_PRIV&#39;</span>, <span class="st">&#39;LOCALE2&#39;</span>,</span>
-<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;ROOMBOARD_ON&#39;</span>, <span class="st">&#39;OTHEREXPENSE_ON&#39;</span>, <span class="st">&#39;ROOMBOARD_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_OFF&#39;</span>, <span class="st">&#39;OTHEREXPENSE_FAM&#39;</span>, <span class="st">&#39;BOOKSUPPLY&#39;</span>, </span>
-<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;ENDOWBEGIN&#39;</span>, <span class="st">&#39;ENDOWEND&#39;</span>, <span class="st">&#39;ADM_RATE&#39;</span>, <span class="st">&#39;RPY_1YR_RT&#39;</span>, <span class="st">&#39;COMPL_RPY_1YR_RT&#39;</span>, <span class="st">&#39;SAT_AVG&#39;</span>, <span class="st">&#39;PREDDEG&#39;</span>])</span>
-<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>college_final <span class="op">=</span> college_data_selected_v2.dropna()</span>
-<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>college_regression <span class="op">=</span> pd.read_csv(<span class="st">&#39;/workspaces/final-project-ava-lasater/data/CollegeScorecard_RegressionData.csv&#39;</span>)</span>
-<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>A classification task reframes the problem by labeling institutions as high-earning or low-earning relative to the sample median. Feature selection using statistical tests, random forest importance, and permutation importance identifies a consistent set of influential predictors, including enrollment size, retention, completion, tuition, and Pell share. Logistic regression and random forest models are then trained on the selected feature set. Both models achieve strong performance, with F1 scores around 0.77–0.82. Calibration curves show that each model produces reasonably reliable probability estimates, with logistic regression slightly smoother and more aligned with observed frequencies.</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>Overall, the results suggest that while tuition contributes to differences in earnings, institutional performance indicators and student composition play a larger role. Earnings outcomes reflect a combination of institutional characteristics and the demographic and academic profile of the students they serve, highlighting the complexity of evaluating value in higher education.</span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>***</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Research Questions</span></span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>How do tuition and financial burden relate to student retention and post-graduation earnings?</span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>Which institutional characteristics (e.g., region, locale, control, enrollment size) most strongly predict earnings outcomes?</span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>Can institutional features be used to classify colleges into high-earning and low-earning groups?</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>Which features provide the strongest predictive signal across linear and machine-learning models?</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Methods Used</span></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Preprocessing</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Combined split CSV filed due to GitHub upload limits</span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Filtered to primarily bachelor&#39;s degree-granting schools</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Removed columns with high missingness</span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Scaled and log-transformed select variables</span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>One-hot encoded region, locale, and control categories</span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a><span class="fu">##### EDA</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Historgrams of all numeric variables</span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Correlation heatmap</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Distribution checks of region, state, locale, and control</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Identification of skewed variables and outliers</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Regression Models</span></span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Multiple Linear Regression</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ridge Regression</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Diagnoistic plots</span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Classification Models</span></span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Feature selection using SelectKBest</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Random forest feature importance</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Permutation importance (self-taught extension)</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Logistic Regression</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Random Forest Classifier</span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Evaluation plots (self-taught extension)</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Key Findings</span></span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tuition has a positive but moderate association with long-term earnings.</span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Retention and completion rates are among the strongest predictors of earnings.</span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Pell Grant percentage is strongly negatively associated with earnings, reflecting socioeconomic patterns.</span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Classification models achieve 77–82% accuracy.</span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Institution size (UGDS), retention, completion, tuition, and socioeconomic mix provide the strongest predictive signal.</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Locale categories and school control type add minimal predictive value once other variables are included.</span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Data Source</span></span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>U.S. Department of Education, Office of Federal Student Aid. College Scorecard Data. https://collegescorecard.ed.gov/data/</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

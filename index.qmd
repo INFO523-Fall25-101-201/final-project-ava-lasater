@@ -104,7 +104,36 @@ sns.set_context("notebook", font_scale=1.1)
 
 ```
 
+```{python}
+# Load data in Python
 
+college_data = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
+
+college_data_ND = college_data.drop_duplicates()
+selected_columns = ['TUITIONFEE_IN', 'TUITIONFEE_OUT', 'NPT4_PUB', 'NPT4_PRIV', 'NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'ST_FIPS', 'REGION', 'LOCALE', 'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON',
+                    'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'CONTROL', 'PREDDEG', 'ADM_RATE', 'UGDS',  'LOCALE2',
+                    'PCTPELL', 'PCTFLOAN',  'ENDOWBEGIN', 'ENDOWEND', 'STUFACR', 'SAT_AVG',
+                    'C150_4', 'COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                    'RPY_1YR_RT',  'COMPL_RPY_1YR_RT',  'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                    'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',  'MD_EARN_WNE_P10',  'PCT10_EARN_WNE_P10',
+                    'PCT25_EARN_WNE_P10',  'PCT75_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',  'MD_EARN_WNE_P6',
+                    'PCT10_EARN_WNE_P6',  'PCT25_EARN_WNE_P6',  'PCT75_EARN_WNE_P6',  'PCT90_EARN_WNE_P6',  'C100_4', 'INSTNM', 'CITY', 'RET_FT4', 'C200_4'] 
+college_data_selected = college_data_ND[selected_columns]
+college_data_selected = college_data_selected[college_data_ND['PREDDEG'] == 3]
+should_be_numeric_columns = ['COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                   'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                   'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',
+                   'PCT10_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',
+                   'PCT10_EARN_WNE_P6',  'PCT90_EARN_WNE_P6']
+for col in should_be_numeric_columns:
+    college_data_selected[col] = pd.to_numeric(college_data_selected[col], errors='coerce') 
+college_data_selected_v2 = college_data_selected.drop(columns=['NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'NPT4_PUB', 'NPT4_PRIV', 'LOCALE2',
+                    'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'BOOKSUPPLY', 
+                    'ENDOWBEGIN', 'ENDOWEND', 'ADM_RATE', 'RPY_1YR_RT', 'COMPL_RPY_1YR_RT', 'SAT_AVG', 'PREDDEG'])
+college_final = college_data_selected_v2.dropna()
+```
 
 ## Abstract
 Increasing concern about the cost and value of higher education has increased interest in understanding how institutional characteristics, and cost relate to student outcomes, particularly earning after graduation. This project uses institution-level data from the U.S. Department of Education’s College Scorecard to investigate how tuition, institutional features, and student enrollment are associated with median earnings 10 years after enrollment. Additionally, it aims to assess the extent to which these variables can predict higher-earning graduates. 
@@ -116,46 +145,50 @@ A classification task reframes the problem by labeling institutions as high-earn
 Overall, the results suggest that while tuition contributes to differences in earnings, institutional performance indicators and student composition play a larger role. Earnings outcomes reflect a combination of institutional characteristics and the demographic and academic profile of the students they serve, highlighting the complexity of evaluating value in higher education.
 
 ***
-## Introduction
-The rising cost of higher education in the United States has intensified concerns about whether attending college is worth it for students. Families increasingly weigh tuition, financial aid, and borrowing against expected earnings after graduation, yet the relationships between these factors and long-term outcomes are complex and difficult to observe directly. This project uses the U.S. Department of Education’s College Scorecard dataset to investigate how institutional cost, student composition, and academic performance are associated with post-graduation earnings.
 
-The analysis focuses on bachelor’s-degree-granting institutions and examines three main domains: cost of attendance (tuition and student debt), institutional characteristics (enrollment, sector, region, and locale), and student outcomes (retention, completion, and earnings). Two complementary modeling strategies are used. First, linear and penalized regression models estimate how these factors relate to median earnings ten years after enrollment. Second, logistic regression and random forest classifiers predict whether an institution falls above or below the sample median earnings level and identify which features are most important for classification. The goal is not to make causal claims, but to characterize patterns in the data and highlight which institutional features are most strongly associated with economic outcomes for graduates.
+#### Research Questions
+How do tuition and financial burden relate to student retention and post-graduation earnings?
 
-***
+Which institutional characteristics (e.g., region, locale, control, enrollment size) most strongly predict earnings outcomes?
 
-## Data Preprocessing
-```{python}
-#| label: load-data
-# Load data in Python
+Can institutional features be used to classify colleges into high-earning and low-earning groups?
 
-college_data = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
-college_data_ND = college_data.drop_duplicates()
-selected_columns = ['TUITIONFEE_IN', 'TUITIONFEE_OUT', 'NPT4_PUB', 'NPT4_PRIV', 'NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
-                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'ST_FIPS', 'REGION', 'LOCALE', 'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON',
-                    'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'CONTROL', 'PREDDEG', 'ADM_RATE', 'UGDS',  'LOCALE2',
-                    'PCTPELL', 'PCTFLOAN',  'ENDOWBEGIN', 'ENDOWEND', 'STUFACR', 'SAT_AVG',
-                    'C150_4', 'COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
-                    'RPY_1YR_RT',  'COMPL_RPY_1YR_RT',  'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
-                    'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',  'MD_EARN_WNE_P10',  'PCT10_EARN_WNE_P10',
-                    'PCT25_EARN_WNE_P10',  'PCT75_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',  'MD_EARN_WNE_P6',
-                    'PCT10_EARN_WNE_P6',  'PCT25_EARN_WNE_P6',  'PCT75_EARN_WNE_P6',  'PCT90_EARN_WNE_P6',  'C100_4', 'INSTNM', 'CITY', 'RET_FT4', 'C200_4'] 
+Which features provide the strongest predictive signal across linear and machine-learning models?
 
-college_data_selected = college_data_ND[selected_columns]
-college_data_selected = college_data_selected[college_data_ND['PREDDEG'] == 3]
-should_be_numeric_columns = ['COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
-                   'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
-                   'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',
-                   'PCT10_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',
-                   'PCT10_EARN_WNE_P6',  'PCT90_EARN_WNE_P6']
-for col in should_be_numeric_columns:
-    college_data_selected[col] = pd.to_numeric(college_data_selected[col], errors='coerce') 
+#### Methods Used
+##### Preprocessing
+- Combined split CSV filed due to GitHub upload limits
+- Filtered to primarily bachelor's degree-granting schools
+- Removed columns with high missingness
+- Scaled and log-transformed select variables
+- One-hot encoded region, locale, and control categories
 
-college_data_selected_v2 = college_data_selected.drop(columns=['NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
-                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'NPT4_PUB', 'NPT4_PRIV', 'LOCALE2',
-                    'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'BOOKSUPPLY', 
-                    'ENDOWBEGIN', 'ENDOWEND', 'ADM_RATE', 'RPY_1YR_RT', 'COMPL_RPY_1YR_RT', 'SAT_AVG', 'PREDDEG'])
-college_final = college_data_selected_v2.dropna()
+##### EDA
+- Historgrams of all numeric variables
+- Correlation heatmap
+- Distribution checks of region, state, locale, and control
+- Identification of skewed variables and outliers
 
-college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_RegressionData.csv')
+##### Regression Models
+- Multiple Linear Regression
+- Ridge Regression
+- Diagnoistic plots
 
-```
+##### Classification Models
+- Feature selection using SelectKBest
+- Random forest feature importance
+- Permutation importance (self-taught extension)
+- Logistic Regression
+- Random Forest Classifier
+- Evaluation plots (self-taught extension)
+
+#### Key Findings
+- Tuition has a positive but moderate association with long-term earnings.
+- Retention and completion rates are among the strongest predictors of earnings.
+- Pell Grant percentage is strongly negatively associated with earnings, reflecting socioeconomic patterns.
+- Classification models achieve 77–82% accuracy.
+- Institution size (UGDS), retention, completion, tuition, and socioeconomic mix provide the strongest predictive signal.
+- Locale categories and school control type add minimal predictive value once other variables are included.
+
+#### Data Source
+U.S. Department of Education, Office of Federal Student Aid. College Scorecard Data. https://collegescorecard.ed.gov/data/

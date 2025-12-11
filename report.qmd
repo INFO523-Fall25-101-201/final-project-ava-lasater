@@ -1,0 +1,698 @@
+---
+title: "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics"
+subtitle: "INFO 523 - Final Project"
+author: 
+  - name: "Ava Lasater"
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "Project description"
+format:
+   html:
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+editor: visual
+execute:
+  warning: false
+  echo: false
+jupyter: python3
+---
+
+```{python}
+#| label: load-packages
+#| include: false
+
+# Load packages here
+# core libraries
+import pandas as pd
+import numpy as np
+import math
+import time
+
+# Visualization
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pandas.plotting import scatter_matrix
+from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
+from sklearn.calibration import CalibrationDisplay
+from sklearn.tree import plot_tree
+
+# Statistical Analysis
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+# Preprocessing
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder, label_binarize
+
+# Feature Selection
+from sklearn.feature_selection import SelectKBest, f_classif
+
+# Model Selection
+from sklearn.model_selection import (
+    train_test_split,
+    cross_val_score,
+    KFold,
+    LeaveOneOut
+)
+
+# Regression Models
+from sklearn.linear_model import (
+    LinearRegression,
+    Ridge, RidgeCV,
+    Lasso, LassoCV,
+    ElasticNet, ElasticNetCV,
+    LogisticRegression
+)
+
+# Classification Models
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+
+# Dimensionality Reduction
+from sklearn.decomposition import PCA
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.pipeline import Pipeline
+
+# Metrics
+from sklearn.metrics import (
+    mean_squared_error,
+    r2_score,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_curve,
+    auc,
+    roc_auc_score,
+    confusion_matrix
+)
+
+# Model Interpretation
+from sklearn.inspection import permutation_importance
+
+
+```
+
+```{python}
+#| label: setup
+#| include: false
+# Set up plot theme and figure resolution
+sns.set_theme(style="whitegrid")
+sns.set_context("notebook", font_scale=1.1)
+
+```
+
+```{python}
+# Load data in Python
+
+college_data = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
+
+college_data_ND = college_data.drop_duplicates()
+selected_columns = ['TUITIONFEE_IN', 'TUITIONFEE_OUT', 'NPT4_PUB', 'NPT4_PRIV', 'NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'ST_FIPS', 'REGION', 'LOCALE', 'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON',
+                    'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'CONTROL', 'PREDDEG', 'ADM_RATE', 'UGDS',  'LOCALE2',
+                    'PCTPELL', 'PCTFLOAN',  'ENDOWBEGIN', 'ENDOWEND', 'STUFACR', 'SAT_AVG',
+                    'C150_4', 'COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                    'RPY_1YR_RT',  'COMPL_RPY_1YR_RT',  'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                    'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',  'MD_EARN_WNE_P10',  'PCT10_EARN_WNE_P10',
+                    'PCT25_EARN_WNE_P10',  'PCT75_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',  'MD_EARN_WNE_P6',
+                    'PCT10_EARN_WNE_P6',  'PCT25_EARN_WNE_P6',  'PCT75_EARN_WNE_P6',  'PCT90_EARN_WNE_P6',  'C100_4', 'INSTNM', 'CITY', 'RET_FT4', 'C200_4'] 
+college_data_selected = college_data_ND[selected_columns]
+college_data_selected = college_data_selected[college_data_ND['PREDDEG'] == 3]
+should_be_numeric_columns = ['COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                   'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                   'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',
+                   'PCT10_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',
+                   'PCT10_EARN_WNE_P6',  'PCT90_EARN_WNE_P6']
+for col in should_be_numeric_columns:
+    college_data_selected[col] = pd.to_numeric(college_data_selected[col], errors='coerce') 
+college_data_selected_v2 = college_data_selected.drop(columns=['NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'NPT4_PUB', 'NPT4_PRIV', 'LOCALE2',
+                    'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'BOOKSUPPLY', 
+                    'ENDOWBEGIN', 'ENDOWEND', 'ADM_RATE', 'RPY_1YR_RT', 'COMPL_RPY_1YR_RT', 'SAT_AVG', 'PREDDEG'])
+college_final = college_data_selected_v2.dropna()
+
+college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_RegressionData.csv')
+```
+***
+## Introduction
+The rising cost of higher education in the United States has intensified concerns about whether attending college is worth it for students. Families increasingly weigh tuition, financial aid, and borrowing against expected earnings after graduation, yet the relationships between these factors and long-term outcomes are complex and difficult to observe directly. This project uses the U.S. Department of Education’s College Scorecard dataset to investigate how institutional cost, student composition, and academic performance are associated with post-graduation earnings.
+
+The analysis focuses on bachelor’s-degree-granting institutions and examines three main domains: cost of attendance (tuition and student debt), institutional characteristics (enrollment, sector, region, and locale), and student outcomes (retention, completion, and earnings). Two complementary modeling strategies are used. First, linear and penalized regression models estimate how these factors relate to median earnings ten years after enrollment. Second, logistic regression and random forest classifiers predict whether an institution falls above or below the sample median earnings level and identify which features are most important for classification. The goal is not to make causal claims, but to characterize patterns in the data and highlight which institutional features are most strongly associated with economic outcomes for graduates.
+
+***
+
+## Data Preprocessing
+The first preprocessing step involved separating the College Scorecard dataset into smaller CSV files due to GitHub’s file size restrictions. Dividing the dataset enabled successful upload and version control. Once stored in the repository, the individual files were reassembled to create a complete dataset that was saved for future use.
+
+A subset of variables was then selected to represent three important factors: cost metrics, institutional characteristics, and student outcome measures. These categories were chosen to capture factors related to university prestige, which will impact cost, overall financial burden of attendance, and student success. 
+
+The dataset was further restricted by selecting institutions that primarily award bachelor’s degrees. This decision reflects structural differences in educational pathways across types of schools. For example, retention and completion rates could be defined inconsistently for two-year or certificate programs, where many students enroll without the intention of completing a degree. Additionally, undergraduate degrees were prioritized because graduate school outcomes will likely be very different and impacted highly by field of study. Limiting the dataset to primarily bachelor’s–degree-granting institutions ensures that outcome measures are comparable.
+
+Next, there was a significant amount of missing values in the dataset. Columns such as demographic columns and certain expense columns were removed from the dataset due to a large amount of missing values and inability to confidently impute missing values. No values were imputed to prioritize data fidelity, since missing values could have resulted from institutional reporting practices or idiosyncrasies. 
+
+Prior to examining individual variables, the distribution of institutions from a geological and control (private vs. public) perspective were examined to ensure that filtering steps did not inadvertently remove entire regions. Histograms comparing the original and cleaned datasets show that U.S. regions and control groups remain represented similarly. 
+
+```{python}
+#| echo: true
+
+fig, axes = plt.subplots(2, 1, figsize=(8.5, 5), sharex=True)
+# orginial distribution
+axes[0].hist(college_data_selected['REGION'], bins=np.arange(1, 10)-0.5, edgecolor='black', color='steelblue')
+axes[0].set_title('Distribution of Institutions by Region (Original Data)')
+axes[0].set_ylabel('Number of Institutions')
+# final distribution
+axes[1].hist(college_final['REGION'], bins=np.arange(1, 10)-0.5, edgecolor='black', color='indianred')
+axes[1].set_title('Distribution of Institutions by Region (Cleaned Data)')
+axes[1].set_xlabel('Region Code')
+axes[1].set_ylabel('Number of Institutions')
+axes[1].set_xticks(range(1, 10))
+plt.tight_layout()
+plt.show()
+```
+Figure 1. Distribution of institutions by region in original data (top) and cleaned data (bottom). The region codes correspond to the following regions: 0:'U.S. Service Schools, 1: New England, 2: Mid East, 3: Great Lakes, 4: Plains, 5: Southeast, 6: Southwest, 7: Rocky Mountains, 8: Far West, 9: Outlying Areas.
+
+```{python}
+#| echo: true
+
+fig, axes = plt.subplots(2, 1, figsize=(8.5,5), sharex=True)
+# orginial distribution
+axes[0].hist(college_data_selected['LOCALE'], bins=np.arange(11, 44)-0.5,
+             edgecolor='black', color='steelblue')
+axes[0].set_title('Distribution of Institutions by Locale (Original Data)')
+axes[0].set_ylabel('Number of Institutions')
+# final distribution
+axes[1].hist(college_final['LOCALE'], bins=np.arange(11, 44)-0.5,
+             edgecolor='black', color='indianred')
+axes[1].set_title('Distribution of Institutions by Locale (Cleaned Data)')
+axes[1].set_xlabel('Locale Code')
+axes[1].set_ylabel('Number of Institutions')
+axes[1].set_xticks(range(11, 44))
+plt.tight_layout()
+plt.show()
+```
+Figure 2. Distribution of institutions by locale in original data (top) and cleaned data (bottom). The locale codes correspond to the following locales: 11: 'City: Large', 12: 'City: Midsize', 13: 'City: Small', 21: 'Suburb: Large', 22: 'Suburb: Midsize', 23: 'Suburb: Small', 31: 'Town: Fringe', 32: 'Town: Distant', 33: 'Town: Remote', 41: 'Rural: Fringe', 42: 'Rural: Distant', 43: 'Rural: Remote.'
+
+```{python}
+#| echo: true
+
+fig, axes = plt.subplots(2, 1, figsize=(8.5,5), sharex=True)
+# orginial distribution
+axes[0].hist(college_data_selected['CONTROL'], bins=np.arange(1, 4)-0.5,
+             edgecolor='black', color='steelblue')
+axes[0].set_title('Distribution of Institutions by Control (Original Data)')
+axes[0].set_ylabel('Number of Institutions')
+# final distribution
+axes[1].hist(college_final['CONTROL'], bins=np.arange(1, 4)-0.5,
+             edgecolor='black', color='indianred')
+axes[1].set_title('Distribution of Institutions by Control (Cleaned Data)')
+axes[1].set_xlabel('Control of Institution (1=Public, 2=Private Non-Profit, 3=Private For-Profit)')
+axes[1].set_ylabel('Number of Institutions')
+axes[1].set_xticks(range(1, 4))
+plt.tight_layout()
+plt.show()
+```
+Figure 3. Distribution of institutions by control (private vs public) in the original data (top), and the cleaned data (bottom).
+
+***
+## Exploratory Data analysis
+After preprocessing and initial variable selection, an exploratory data analysis was conducted to understand the distribution of key variables, identify structural patterns in the dataset, and evaluate suitability of each variable. The EDA focuses on the three major domains described previously: cost of attendance, institutional characteristics, and student outcomes. 
+
+A series of histograms was generated for each numerical variable retained in the dataset. 
+
+```{python}
+#| echo: true
+
+numerical_columns = college_final.select_dtypes(include=['number']).columns
+n_cols = 3  # number of plots per row
+n_rows = math.ceil(len(numerical_columns) / n_cols)
+
+fig, axes = plt.subplots(n_rows, n_cols, figsize=(18, n_rows * 4))
+axes = axes.flatten()
+
+for i, col in enumerate(numerical_columns):
+    sns.histplot(college_final[col], bins=30, kde=True, color='steelblue', ax=axes[i])
+    axes[i].set_title(f'Distribution of {col}')
+    axes[i].set_xlabel(col)
+    axes[i].set_ylabel('Frequency')
+
+# Turn off any unused subplots
+for j in range(i + 1, len(axes)):
+    axes[j].axis('off')
+
+plt.tight_layout()
+plt.show()
+```
+Figure 4. Histograms of all retained numerical variables. 
+
+When looking at the cost metrics, in-state and out-of-state tuition both skewed to the right, with most institutions clustered between $10,000 and $40,000. There were some schools that had much higher tuition rates, which likely suggest highly selective and prodigious universities. 
+
+Considering the institutional characteristics, enrollment size shows a severe right skew, with most institutions enrolling between 1,000 and 6,000 undergraduates. However there is a long tail of universities with the maximum enrollment of 156,755. This outlier is Southern New Hampshire University. This institution has both in-person and online campuses that contributes to the large number of students. Since this represents a meaningful difference, no outlier removal was performed, though log-transformations may be used for visualization. Next, the student-to-faculty ratio is highly skewed, driven by a small number of likely specialized institutions with unusually high ratios. This can vary greatly depending on how schools report these numbers, so this column was removed before further analysis was conducted.  Finally, the completion and retention rates are bounded between 0 and 1, with many institutions clustered toward the high end of the distribution. There are several schools with 0% completion rate within 4 years, but with completion rates existing for 6 and 8 years. Schools which had  0% completion for 4, 6, and 8 years were removed from the data since they may indicate errors or initially unreported data. Similarly, there were three schools with 0% retention rates. One of these schools is closed, so it does not have retention data, and the other two seem to be missing the data. Here, as well, the schools with 0% retention were removed from the dataset. 
+
+For the outcome metrics, debt measures appear approximately normally distributed with not extreme outliers. Earning percentiles show a strong right skew, reflecting the wide variation in early-career earnings across institutions. The median earnings follow a more moderate skew and can be used as a more stable proxy for early-career earnings. 
+
+A correlation matrix was created to begin to understand the relationships present in the dataset. 
+
+```{python}
+#| echo: true
+
+numerical_columns = college_final.select_dtypes(include=['number']).columns
+plt.figure(figsize=(12, 10))
+correlation_matrix = college_final[numerical_columns].corr()
+sns.heatmap(correlation_matrix, annot=False, fmt=".2f", cmap='coolwarm', cbar=True)
+plt.title('Correlation Matrix of Numerical Variables')
+plt.tight_layout()
+plt.show()
+```
+Figure 5. Correlation matrix expressing relationships between numerical variables.
+
+The correlation analysis demonstrates that tuition levels have relatively weak associations with student outcomes, while institutional performance metrics such as retention and completion rates show moderate positive relationships with earnings. Conversely, the share of Pell recipients is negatively associated with both earnings and completion measures, highlighting the influence of student socioeconomic background. These patterns suggest that institutional characteristics and student demographics have stronger relationships with outcomes than the price of attendance.
+
+## Models
+### Linear Regression
+For the regression analysis, the target feature is the median earnings after 10 years. This was selected since it captures a large span of time, and will be less influenced by institutional differences than completion and retention. This allows for a more clear relationship between financial features, while still controlling for differences in institution type and locale. Skewed variables were log transformed, and all the features not already on a 0 to 1 scale were scaled.
+
+Diagnostic plots indicate that the linear model is reasonably well-specified. Residuals were centered around zero with no systematic patterns, suggesting that the linearity assumption holds. Some heteroscedasticity is present in mid-range predicted values, and a long right-tail appears in the residual distribution and Q–Q plot, driven by a small number of high-earning institutions. Despite these limitations, predicted values align closely with observed values, indicating that the model captures substantial variation in earnings after graduation.
+
+Variance inflation factors (VIFs) were examined to assess multicollinearity. Most predictors had VIF values below 5, indicating low multicollinearity. Tuition variables showed higher VIFs due to strong correlation between in-state and out-of-state tuition. To address this, out-of-state tuition was removed, and the model retained only in-state tuition as the primary cost predictor.
+
+Although Pell Grant share and the private nonprofit indicator had VIFs slightly above 10, these were retained because they represent essential institutional characteristics related to socioeconomic composition and governance. Their inclusion was theoretically justified despite moderate multicollinearity.
+
+After removing the highly collinear variable out-of-state tuition, the linear regression model remained stable with an adjusted R² of 0.566, indicating that the selected institutional characteristics explain approximately 57% of the variation in median earnings ten years after enrollment. The revised model substantially reduced multicollinearity and produced more interpretable coefficients.
+
+The OLS coefficient plot highlights several clear patterns in how institutional features relate to median earnings 10 years after enrollment. The strongest positive predictors are in-state tuition, first-year retention (RET_FT4), four-year completion rates (C100_4), and enrollment size (UGDS). These variables reflect institutional resources and student success—factors that consistently align with higher post-graduation earnings.
+
+On the negative side, PCTPELL (share of Pell Grant recipients) is the most influential predictor, indicating that institutions serving more low-income students tend to report lower median earnings, a pattern likely driven by socioeconomic factors rather than institutional quality alone. Several regional indicators (e.g., Southeast, Rocky Mountains, Outlying Areas) and rural locale categories also show negative associations, suggesting geographic labor-market effects.
+
+Overall, the coefficient patterns reinforce that student success metrics and institutional characteristics—rather than cost alone—play the largest role in explaining variation in long-term earnings across colleges.
+
+```{python}
+#| echo: true
+
+# Dropping out of state tutition since it is highly correlated with in-state tuition
+college_regression_v2 = college_regression.drop(columns=['TUITIONFEE_OUT'])
+
+# now we can rerun the model with the reduced set of variables
+# split the dataset
+y = college_regression_v2['MD_EARN_WNE_P10']
+# X = all columns except the target
+X = college_regression_v2.drop(columns=['MD_EARN_WNE_P10'])
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+# Adding a constant for OLS
+X_train_with_const = sm.add_constant(X_train)
+X_test_with_const = sm.add_constant(X_test)
+
+# Fitting the OLS model
+model = sm.OLS(y_train, X_train_with_const).fit()
+
+# Making predictions
+y_pred = model.predict(X_test_with_const)
+
+# Evaluating the model
+# creating a residual plot
+X_test_with_const = sm.add_constant(X_test)
+predictions = model.predict(X_test_with_const)
+predictions = pd.to_numeric(predictions, errors='coerce')
+residuals = y_test - predictions
+residuals = pd.to_numeric(residuals, errors='coerce').fillna(0)
+
+VIFs = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+for idx, vif in enumerate(VIFs):
+    print(f"VIF for column {X.columns[idx]}: {vif}")
+
+# first, let's look at the model results
+model_summary2 = model.summary2()
+print(model_summary2)
+
+# Calculating MSE
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse:.2f}')
+
+# Extracting Adjusted R-squared from the model's summary
+r2 = r2_score(y_test, y_pred)
+print(f'R-squared: {r2:.4f}')
+
+ols_coefs = pd.Series(model.params, index=X_train_with_const.columns)
+ols_coefs = ols_coefs.drop('const')  # remove intercept for cleaner plot
+
+# Combined Plot 
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# Residual Plot
+sns.residplot(
+    x=predictions,
+    y=residuals,
+    lowess=True,
+    color='steelblue',
+    line_kws={'color': 'firebrick', 'lw': 1},
+    ax=axes[0]
+)
+axes[0].set_xlabel('Predicted Values')
+axes[0].set_ylabel('Residuals')
+axes[0].set_title('Residual Plot for OLS Regression')
+
+# Coefficient Plot
+ols_coefs.sort_values().plot(
+    kind='barh',
+    color='steelblue',
+    ax=axes[1]
+)
+axes[1].set_title("OLS Regression Coefficients")
+axes[1].set_xlabel("Coefficient Value")
+axes[1].set_ylabel("Feature")
+
+plt.tight_layout()
+plt.show()
+```
+Figure 6. Residual plot (left) shows curvature and heteroscedasticity, indicating model misfit in the OLS regression. Coefficient plot (right) highlights key predictors: in-state tuition, retention, completion rates, and enrollment size have positive associations with earnings, while Pell share and certain regions show strong negative effects.
+
+### Ridge Regression
+
+Both in-state and out-of-state tuition variables were retained in the Ridge model to preserve important financial information, despite their correlation. After refitting Ridge regression with both predictors, the model achieved the same R² (≈ 0.49) and nearly identical residual behavior compared to the reduced model. This confirms that Ridge regression effectively stabilizes coefficient estimates in the presence of multicollinearity while preserving the interpretive value of key financial predictors.
+
+```{python}
+#| echo: true
+
+# using data with both tutition columns for ridge regression
+y = college_regression['MD_EARN_WNE_P10']
+# X = all columns except the target
+X = college_regression.drop(columns=['MD_EARN_WNE_P10'])
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+# ridge regression
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+# Add a constant to the model (for statsmodels)
+X_train_const = sm.add_constant(X_train)
+X_test_const = sm.add_constant(X_test)
+
+# Initialize the Ridge Regression model
+ridge_reg = Ridge(alpha = 1)  # Alpha is the regularization strength; adjust accordingly
+
+# Fit the model
+ridge_reg.fit(X_train, y_train)
+
+# Predict on the testing set
+r_y_pred = ridge_reg.predict(X_test)
+
+# Calculate and print the MSE
+mse = mean_squared_error(y_test, r_y_pred)
+print('Ridge Regression:')
+print(f'Mean Squared Error: {mse}')
+
+# Compute residuals for ridge regression
+r2 = r2_score(y_test, r_y_pred)
+print(f'R-squared: {r2}')
+
+residuals = y_test - r_y_pred
+
+# Prepare coefficient series
+ridge_coefs = pd.Series(ridge_reg.coef_, index=X_train.columns)
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# Residual Plot
+sns.residplot(
+    x=r_y_pred,
+    y=residuals,
+    lowess=True,
+    color='steelblue',
+    line_kws={'color': 'firebrick', 'lw': 1},
+    ax=axes[0]
+)
+axes[0].set_xlabel('Predicted Values')
+axes[0].set_ylabel('Residuals')
+axes[0].set_title('Residual Plot for Ridge Regression')
+
+# Coefficient Plot
+ridge_coefs.sort_values().plot(
+    kind='barh',
+    color='steelblue',
+    ax=axes[1]
+)
+axes[1].set_title("Ridge Regression Coefficients")
+axes[1].set_xlabel("Coefficient Value")
+axes[1].set_ylabel("Feature")
+
+plt.tight_layout()
+plt.show()
+```
+
+Figure 7. Residual plot (left) for the Ridge model shows similar curvature and heteroscedasticity patterns as OLS, indicating remaining nonlinear structure in the data. Coefficient plot (right) reveals stabilized effect sizes: tuition, retention, completion, and enrollment have the strongest positive associations with earnings, while Pell share and several regional indicators exert the largest negative influences.
+
+### Feature Selection for Classification
+
+To simplify the model and focus on the most informative predictors, two feature selection methods were applied. First, SelectKBest identified the top 15 variables most strongly associated with the high- vs. low-earnings outcome. Second, a Random Forest classifier was used to rank features by importance, capturing nonlinear effects and interactions. The final feature set was created by taking the union of the top features from both methods, ensuring that only the most relevant predictors were retained for classification.
+
+```{python} 
+#| echo: true
+
+# Need to create the target variable
+median_income = college_regression['MD_EARN_WNE_P10'].median()
+college_regression['HighEarnings'] = (college_regression['MD_EARN_WNE_P10'] >= median_income).astype(int)
+
+# defining X and y
+X = college_regression.drop(columns=['MD_EARN_WNE_P10', 'HighEarnings'])
+y = college_regression['HighEarnings']
+ # using SelectKBest for feature selection
+# used https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html
+selector = SelectKBest(k=15)
+x_new = selector.fit_transform(X, y)
+
+selected_features = X.columns[selector.get_support()]
+print('Top 15 features:')
+print(selected_features)
+
+# used https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+# creating a random forest
+rf = RandomForestClassifier(random_state=42)
+rf.fit(X, y)
+
+# determing the importances
+importances = pd.Series(rf.feature_importances_, index=X.columns)
+# picking the top importances
+top_importances = importances.sort_values(ascending=False).head(15)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=top_importances.values, y=top_importances.index, palette='viridis')
+plt.title('Top 15 Feature Importances (Random Forest)')
+plt.xlabel('Importance Score')
+plt.ylabel('Feature')
+plt.show()
+
+# filtering for just the top features from these two anayses
+final_features = list(set(selected_features) | set(top_importances.index))
+X_final = X[final_features].copy()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+```
+Figure 8. Random Forest feature importance rankings show that retention (RET_FT4), 4-year completion (C100_4), Pell share (PCTPELL), tuition levels, and enrollment size (UGDS) are the strongest predictors of whether an institution is classified as high-earning. Regional indicators and locale categories contribute modestly, while most fine-grained institutional descriptors have relatively minor influence.
+
+Next, permutation importance showed that institution size (UGDS) and first-year retention were the strongest predictors of whether an institution falls into the high-earning category. Cost-related variables and socioeconomic composition (PCTPELL) also contributed substantially, while several regional indicators (Southeast, Mid East) demonstrated meaningful predictive value. In contrast, many locale categories and institutional control types had only minor influence on classification performance, suggesting that structural and academic characteristics matter more than geographic setting.
+
+```{python}
+#| echo: true
+
+# compute permutation importance on the test set
+result = permutation_importance(
+    rf,
+    X_test,
+    y_test,
+    n_repeats=30,       # number of shuffles per feature
+    random_state=42,
+    n_jobs=-1
+)
+
+# put into a Series for easy viewing
+perm_importances = pd.Series(
+    result.importances_mean,
+    index=X_test.columns
+).sort_values(ascending=False)
+
+# look at the top 15
+top_perm = perm_importances.head(15)
+print(top_perm)
+
+# plot the top 15 permutation importances
+plt.figure(figsize=(10, 6))
+sns.barplot(x=top_perm.values, y=top_perm.index, palette='viridis')
+plt.xlabel("Mean decrease in model score")
+plt.ylabel("Feature")
+plt.title("Top 15 Features by Permutation Importance (Random Forest)")
+plt.tight_layout()
+plt.show()
+```
+Figure 9. Permutation importance results from the Random Forest model show that enrollment size (UGDS), retention (RET_FT4), tuition levels, and Pell share (PCTPELL) are the most influential predictors of high-earning institutions. Regional indicators and completion rates also contribute meaningfully, while finer-grained locale and control variables have comparatively minor effects
+
+### Logistic Regression
+
+A logistic regression model was trained to classify institutions as high- or low-earning based on whether their median post-graduation earnings exceeded the sample median. Using standardized predictors, the model achieved an accuracy of 0.77, with precision and recall both around 0.77, indicating balanced performance in correctly identifying high-earning institutions. The F1-score of 0.77 reflects strong agreement between precision and recall. Five-fold cross-validation produced an average F1-score of 0.80, and completed in 0.09 seconds, suggesting that the model is both stable and efficient. These results indicate that a linear, interpretable model can effectively capture institutional factors associated with earnings outcomes.
+
+```{python}
+#| echo: true
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X_final, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Building the logistic regression model
+log_reg = LogisticRegression(multi_class = 'multinomial', solver = 'lbfgs', max_iter = 1000, random_state = 42)
+log_reg.fit(X_train, y_train)
+
+# Cross validation
+start_time = time.time()
+kf = KFold(n_splits = 5) 
+kf_f1_scores = cross_val_score(log_reg, X_train, y_train, cv = kf, scoring = 'f1_weighted')
+kf_f1_average = np.mean(kf_f1_scores)
+print(f"k-Fold F1-Score: {kf_f1_average:.2f}")
+kfold_time = time.time() - start_time
+print(f"k-Fold CV took {kfold_time:.2f} seconds")
+
+# Making predictions
+log_predictions = log_reg.predict(X_test)
+print()
+print("Logistic Regression Accuracy:", accuracy_score(y_test, log_predictions))
+print("Logistic Regression Precision:", precision_score(y_test, log_predictions, average = 'weighted'))
+print("Logisitc Regression Recall:", recall_score(y_test, log_predictions, average = 'weighted'))
+print("Logistic Regression F-1 Score:", f1_score(y_test, log_predictions, average = 'weighted'))
+
+# Visualizations
+
+fig, axes = plt.subplots(1, 3, figsize=(22, 6))
+
+# Confusion Matrix
+ConfusionMatrixDisplay.from_estimator(log_reg, X_test, y_test, cmap='Blues', ax=axes[0])
+axes[0].set_title("Confusion Matrix")
+
+# ROC Curve
+RocCurveDisplay.from_estimator(log_reg, X_test, y_test, ax=axes[1])
+axes[1].plot([0, 1], [0, 1], 'k--')
+axes[1].set_title("ROC Curve")
+
+# Coefficient Plot
+coef = pd.Series(log_reg.coef_[0], index=X_final.columns)
+coef = coef.sort_values()
+
+axes[2].barh(coef.index, coef.values, color='steelblue')
+axes[2].set_title("Logistic Regression Coefficients")
+axes[2].set_xlabel("Effect on log-odds of High Earnings")
+
+plt.tight_layout()
+plt.show()
+```
+Figure 10. Logistic regression diagnostics showing classification performance (confusion matrix and ROC curve) and the relative influence of predictors (coefficient plot).
+
+### Random Forest 
+
+A Random Forest classifier was trained using the selected feature set to capture nonlinear relationships and interactions between institutional characteristics and earnings outcomes. The model achieved an accuracy of 0.78, with precision, recall, and F1-scores all around 0.78. Five-fold cross-validation produced an average F1-score of 0.82, indicating strong generalization performance. Compared to logistic regression, the Random Forest model performed slightly better across all metrics, suggesting that nonlinear effects and variable interactions contribute meaningfully to predicting institutional earnings categories.
+
+Despite the strong performance of the random forest model (F1 ≈ 0.82), the results should be interpreted cautiously. Feature importance reflects associations, not causation, and earnings outcomes depend heavily on major choice and student-level factors not captured in this dataset. Additionally, the College Scorecard dataset contains reporting discrepancies, which may introduce bias into the analysis.
+
+```{python}
+#| echo: true
+# creating model
+
+rf_classifier = RandomForestClassifier()
+rf_classifier.fit(X_train, y_train)
+rf_predictions = rf_classifier.predict(X_test)
+
+# cross validation for random forest
+print('Random Forest Cross Validation')
+start_time = time.time()
+kf = KFold(n_splits = 5) 
+kf_f1_scores = cross_val_score(rf_classifier, X_train, y_train, cv = kf, scoring = 'f1_weighted')
+kf_f1_average = np.mean(kf_f1_scores)
+print(f"k-Fold F1-Score: {kf_f1_average:.2f}")
+kfold_time = time.time() - start_time
+print(f"k-Fold CV took {kfold_time:.2f} seconds")
+
+# final evaluation metrics X
+print()
+print("Random Forest Accuracy:", accuracy_score(y_test, rf_predictions))
+print("Random Forest Precision:", precision_score(y_test, rf_predictions, average = 'weighted'))
+print("Random Forest Recall:", recall_score(y_test, rf_predictions, average = 'weighted'))
+print("Random Forest F-1 Score:", f1_score(y_test, rf_predictions, average = 'weighted'))
+
+# visualzations
+fig, axes = plt.subplots(1, 3, figsize=(22, 6))
+
+# Confusion Matrix
+ConfusionMatrixDisplay.from_estimator(rf_classifier, X_test, y_test, cmap='Blues', ax=axes[0])
+axes[0].set_title("Confusion Matrix")
+
+# ROC Curve
+RocCurveDisplay.from_estimator(rf_classifier, X_test, y_test, ax=axes[1])
+axes[1].plot([0, 1], [0, 1], 'k--')
+axes[1].set_title("ROC Curve")
+
+# Feature Importance
+rf_importances = pd.Series(rf_classifier.feature_importances_, index=X_test.columns)
+rf_importances = rf_importances.sort_values(ascending=True).tail(15)
+
+axes[2].barh(rf_importances.index, rf_importances.values, color='steelblue')
+axes[2].set_title("Top Feature Importances – Random Forest")
+axes[2].set_xlabel("Importance")
+
+plt.tight_layout()
+plt.show()
+```
+Figure 11. Random Forest regression diagnostics showing classification performance (confusion matrix and ROC curve) and the predictive importance of features (feature importance plot).
+
+The calibration curve shows that both Logistic Regression and Random Forest produce probability estimates that track the 45° perfect calibration line closely across most probability bins. Logistic Regression remains slightly smoother and more consistent, but the Random Forest model also follows the ideal trend well, with only mild deviations in the mid-range. Neither model exhibits the severe overconfidence or step-like jumps that Random Forests often display on poorly structured problems. Overall, Logistic Regression provides the most stable calibration, but Random Forest achieves comparable reliability while offering slightly stronger classification performance. These results indicate that both models produce usable probability estimates, though Logistic Regression remains the safer choice when precise probability calibration is important.
+
+```{python}
+#| echo: true
+
+# Calibration Curve
+# https://scikit-learn.org/stable/modules/calibration.html to help create this plot
+plt.figure(figsize=(7, 6))
+
+# Logistic Regression
+CalibrationDisplay.from_estimator(
+    log_reg, X_test, y_test, n_bins=10, name="Logistic Regression", ax=plt.gca()
+)
+
+# Random Forest
+CalibrationDisplay.from_estimator(
+    rf_classifier, X_test, y_test, n_bins=10, name="Random Forest", ax=plt.gca()
+)
+
+plt.title("Calibration Curve: Logistic Regression vs Random Forest")
+plt.xlabel("Mean Predicted Probability")
+plt.ylabel("Fraction of Positives")
+plt.plot([0,1], [0,1], 'k--', linewidth=1)  # perfect calibration line
+plt.tight_layout()
+plt.show()
+```
+Figure 12. Calibration curve comparing Logistic Regression and Random Forest. Logistic Regression shows slightly smoother calibration than the Random Forest.	
+
+## Evalutation
+
+Overall, the regression and classification results tell a consistent story. The ordinary least squares and Ridge regression models explain roughly half of the variation in median earnings ten years after enrollment, with in-state tuition, retention, completion, and Pell share emerging as key predictors. However, diagnostic plots show curvature, heteroscedasticity, and heavy-tailed residuals, indicating that linear models do not fully capture the structure of the data and should be interpreted primarily as describing average trends rather than providing precise predictions for individual institutions.
+
+The classification models perform somewhat better from a predictive standpoint. Logistic regression achieves an accuracy of about 0.77 with a cross-validated F1 of approximately 0.80, showing that a simple linear decision boundary can distinguish high- and low-earning institutions with reasonable accuracy. The random forest classifier improves performance slightly (accuracy ≈ 0.78, F1 ≈ 0.82) by capturing nonlinear relationships and interactions among predictors. However, calibration curves show that logistic regression produces far better-calibrated probability estimates, while the random forest tends to be overconfident. Permutation importance results align with earlier findings, emphasizing student body size, retention, completion, tuition, and Pell share as the most influential features. The modest accuracy gain from random forest suggests that although nonlinear effects exist, much of the signal is already captured by the linear model.
+
+Several limitations should be noted. The analysis is based on cross-sectional, institution-level aggregates and cannot separate institutional effects from differences in student populations, academic programs, or local impacts. Important factors such as major, selectivity, and student academic preparation are not modeled explicitly. In addition, missing data and reporting variation in the College Scorecard may introduce noise or bias. Finally, all models estimate associations rather than causal effects. Higher tuition or higher retention may correlate with earnings for reasons unrelated to the policies of a particular institution.
+
+## Conclusion
+
+This project examined how tuition, financial burden, institutional characteristics, and student success metrics relate to post-graduation earnings using the College Scorecard dataset. Across both regression and classification approaches, tuition and student debt measures were associated with earnings, but institutional performance and student composition were as important. Institutions with higher retention and completion rates tended to have higher median earnings, while those serving larger shares of Pell Grant recipients tended to have lower earnings, consistent with underlying socioeconomic differences. Regional indicators also played a role, reflecting geographic wage disparities.
+
+The modeling results suggest that the cost of an institution is an imperfect proxy for long-term outcomes. Higher-tuition institutions often have stronger earnings, but this relationship is intertwined with selectivity, student demographics, and academic success. Classification models show that a combination of enrollment size, retention, completion, tuition, and Pell share provides the strongest predictive power, while fine-grained locale categories and control type contribute relatively little once other factors are accounted for.
+
+Future work could extend this analysis by incorporating program-level data (e.g., major fields), longitudinal trends over multiple cohorts, or student-level information where available. Methods such as causal inference or matching designs could help disentangle institutional impact from student selection. Nevertheless, the findings here provide a useful descriptive map of how cost, institutional characteristics, and student outcomes align with graduates’ early-career earnings across U.S. colleges and universities.
+
+## References
+
+Buitinck, L., Louppe, G., Blondel, M., Pedregosa, F., & Mueller, A. (2024). Permutation importance (Version 1.4) [Documentation]. scikit-learn. https://scikit-learn.org/stable/modules/permutation_importance.html
+
+scikit-learn developers. (2024). Plotting feature importance for forests of trees [Example]. https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html 
+
+U.S. Department of Education. (2024). College Scorecard Data [Data set]. Office of Federal Student Aid. https://collegescorecard.ed.gov/data/
