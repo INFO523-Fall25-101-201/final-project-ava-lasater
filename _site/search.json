@@ -130,21 +130,21 @@
     "href": "presentation.html#logistic-regression-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Logistic Regression Results",
-    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.07 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
+    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.10 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
   },
   {
     "objectID": "presentation.html#random-forest-classification",
     "href": "presentation.html#random-forest-classification",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Classification",
-    "text": "Random Forest Classification\n\nModel: Random Forest classifier using the selected feature set.\nPerformance:\n\nAccuracy ≈ 0.78\nPrecision, Recall, F1 ≈ 0.78\n5-fold CV F1 ≈ 0.82\n\nInsights:\n\nSlightly better predictive performance than logistic regression.\nCaptures nonlinear relationships and interactions among:\n\nEnrollment size (UGDS)\nRetention and completion\nTuition levels\nPell share\nCertain regions"
+    "text": "Random Forest Classification\n\nModel: Random Forest classifier using the selected feature set.\nPerformance:\n\nAccuracy ≈ 0.78\nPrecision, Recall, F1 ≈ 0.78\n5-fold CV F1 ≈ 0.80\n\nInsights:\n\nSlightly better predictive performance than logistic regression.\nCaptures nonlinear relationships and interactions among:\n\nEnrollment size (UGDS)\nRetention and completion\nTuition levels\nPell share\nCertain regions"
   },
   {
     "objectID": "presentation.html#random-forest-results",
     "href": "presentation.html#random-forest-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Results",
-    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.80\nk-Fold CV took 1.07 seconds\nRandom Forest Accuracy: 0.7694915254237288\nRandom Forest Precision: 0.7713501006414717\nRandom Forest Recall: 0.7694915254237288\nRandom Forest F-1 Score: 0.7691414020848254"
+    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.06 seconds\nRandom Forest Accuracy: 0.7694915254237288\nRandom Forest Precision: 0.7703288291806608\nRandom Forest Recall: 0.7694915254237288\nRandom Forest F-1 Score: 0.7693431112108853"
   },
   {
     "objectID": "presentation.html#permutation-importance-random-forest",
