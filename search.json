@@ -123,7 +123,7 @@
     "href": "presentation.html#logistic-regression-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Logistic Regression Results",
-    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.07 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
+    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.12 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
   },
   {
     "objectID": "presentation.html#random-forest-classification",
@@ -137,7 +137,7 @@
     "href": "presentation.html#random-forest-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Results",
-    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.09 seconds\nRandom Forest Accuracy: 0.7661016949152543\nRandom Forest Precision: 0.768961952904861\nRandom Forest Recall: 0.7661016949152543\nRandom Forest F-1 Score: 0.765536000918228"
+    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.13 seconds\nRandom Forest Accuracy: 0.7762711864406779\nRandom Forest Precision: 0.7781730280855547\nRandom Forest Recall: 0.7762711864406779\nRandom Forest F-1 Score: 0.7759313608470364"
   },
   {
     "objectID": "presentation.html#calibration-probabilities-vs.-accuracy",
