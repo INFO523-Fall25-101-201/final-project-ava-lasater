@@ -8,7 +8,7 @@ Institution: College of Information Science, University of Arizona
 #### Project Overview
 This project examines how tuition, financial aid indicators, and institutional characteristics relate to student retention and post-graduation earnings using the U.S. Department of Education’s College Scorecard dataset. The analysis focuses on bachelor’s-degree-granting institutions and investigates how structural, financial, and demographic factors contribute to long-term student outcomes.
 
-The study incorporates exploratory data analysis, linear regression, Ridge regression, logistic regression, random forest classification, feature selection techniques, and permutation importance. The goal is to describe broad institutional patterns—not to make causal claims—and provide insight into which variables are most strongly associated with institutional student success.
+The study incorporates exploratory data analysis, linear regression, Ridge regression, logistic regression, random forest classification, feature selection techniques, and permutation importance. The goal is to describe broad institutional patterns and provide insight into which variables are most strongly associated with institutional student success.
 
 #### Research Questions
 How do tuition and financial burden relate to student retention and post-graduation earnings?

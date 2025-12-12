@@ -181,18 +181,6 @@ college_regression = pd.read_csv('/workspaces/final-project-ava-lasater/data/Col
 
 ***
 
-## Sample Structure Check {.smaller}
-
-- Compared **original vs. cleaned** distributions for:
-  - State, region, locale, and control type.
-- **Result:** Filtering and missing-data removal:
-  - Did **not** wipe out any region or control group.
-  - Preserved a broad mix of public and private institutions across the U.S.
-- Interpretation: The cleaned dataset still represents a diverse institutional landscape.
-
-
-***
-
 
 ## Exploratory Data Analysis {.smaller}
 
@@ -254,22 +242,14 @@ plt.show()
 
 ***
 
-## Linear & Ridge Regression Results {.smaller}
+## Linear Regression Results {.smaller}
 
 - **Linear model (OLS):**
   - Adjusted R² ≈ 0.57 — institutional features explain over half of the variation in 10-year earnings.
   - Largest positive coefficients: in-state tuition, first-year retention, 4-year completion, and enrollment size.
   - Largest negative coefficients: Pell Grant share (PCTPELL), median student debt, and several lower-earning regional indicators.
-- **Multicollinearity:**
-  - High VIF for tuition variables → removed out-of-state tuition for OLS.
-  - Ridge regression refit with both tuition variables:
-    - Similar R² (~0.49 on test data).
-    - Coefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).
-    - The largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).
-- **Limitations:**
-  - Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.
 
-***
+*** 
 
 ## Linear Regression Results {.smaller}
 
@@ -354,6 +334,17 @@ plt.show()
 ```
 
 ***
+
+## Ridge Regression Results {.smaller}
+  - Ridge regression refit with both tuition variables:
+    - Similar R² (~0.49 on test data).
+    - Coefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).
+    - The largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).
+- **Limitations:**
+  - Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.
+
+***
+
 ## Ridge Regression Results {.smaller}
 
 ```{python}
@@ -516,7 +507,7 @@ X_final = X[final_features].copy()
 
 # compute permutation importance on the test set
 result = permutation_importance(
-    rf_classifier,
+    rf,
     X_test,
     y_test,
     n_repeats=30,       # number of shuffles per feature
@@ -532,7 +523,7 @@ perm_importances = pd.Series(
 
 # look at the top 15
 top_perm = perm_importances.head(15)
-
+print(top_perm)
 
 # plot the top 15 permutation importances
 plt.figure(figsize=(10, 6))
@@ -543,8 +534,6 @@ plt.title("Top 15 Features by Permutation Importance (Random Forest)")
 plt.tight_layout()
 plt.show()
 
-final_features = list(set(selected_features) | set(top_importances.index))
-X_final = X[final_features].copy()
 ```
 
 ***
@@ -765,8 +754,7 @@ plt.show()
 - **No causal claims:**
   - Observational, cross-sectional analysis; cannot separate institution effect from selection bias.
 - **Future directions:**
-  - Incorporate program/major mix and selectivity.
-  - Explore causal methods or matching designs.
+  - Incorporate program and major details.
   - Examine changes over time (longitudinal trends).
 
 ***
@@ -776,9 +764,6 @@ plt.show()
 - Tuition alone is an incomplete indicator of value.
 - **Academic success metrics** (retention & completion) and **student demographics** are central to explaining earnings.
 - Machine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers.
-- For policy, student advising, or institutional benchmarking, interpreting **both cost and outcomes** together is essential.
-
-
 
 
 

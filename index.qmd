@@ -5,7 +5,7 @@ author:
   - name: "Ava Lasater"
     affiliations:
       - name: "College of Information Science, University of Arizona"
-description: "Project description"
+description: "A data-driven analysis of how tuition, institutional characteristics, and student demographics shape post-graduation earnings across U.S. colleges, using regression and machine-learning models to identify the strongest predictors of student economic outcomes."
 format:
    html:
     code-tools: true
