@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.26">
+
+  <meta name="author" content="Ava Lasater">
+  <title>Predicting Post-Grad Earnings – Predicting Post-Graduation Earnings</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-3284f4d69c379a59dc58037f95ed6c56.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="images/watercolour_sys02_img34_teacup-ocean.jpg" data-background-opacity="0.7" data-background-size="stretch" data-slide-number="none" class="quarto-title-block center">
+  <h1 class="title">Predicting Post-Graduation Earnings</h1>
+  <p class="subtitle">INFO 523 - Fall 2025 - Final Project</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Ava Lasater 
+</div>
+</div>
+</div>
+
+</section>
+<section id="overview" class="slide level2 smaller">
+<h2>Overview</h2>
+<ul>
+<li><strong>Goal:</strong> Understand how tuition, financial burden, and institutional characteristics relate to post-graduation earnings.</li>
+<li><strong>Data:</strong> U.S. Department of Education <strong>College Scorecard</strong></li>
+<li><strong>Methods:</strong>
+<ul>
+<li>Exploratory data analysis</li>
+<li>Linear &amp; Ridge regression</li>
+<li>Logistic regression &amp; Random Forest</li>
+<li>Feature selection &amp; permutation importance</li>
+</ul></li>
+<li><strong>Key focus:</strong> Which institutional features most strongly predict higher earnings 10 years after enrollment?</li>
+</ul>
+</section>
+<section id="research-questions" class="slide level2 smaller">
+<h2>Research Questions</h2>
+<ul>
+<li><strong>RQ1.</strong> How do tuition and financial burden relate to median earnings 10 years after enrollment?</li>
+<li><strong>RQ2.</strong> How do institutional characteristics (region, locale, control, size) and student composition (Pell share) relate to earnings and completion?</li>
+<li><strong>RQ3.</strong> Can institutional features reliably classify colleges as <strong>high-earning vs.&nbsp;low-earning</strong>?</li>
+<li><strong>RQ4.</strong> Which features are most important for prediction across linear and machine-learning models?</li>
+</ul>
+</section>
+<section id="data-preprocessing" class="slide level2 smaller">
+<h2>Data &amp; Preprocessing</h2>
+<ul>
+<li><strong>Source:</strong> U.S. College Scorecard (institution-level data).</li>
+<li><strong>Scope:</strong>
+<ul>
+<li>Filtered to institutions that <strong>primarily award bachelor’s degrees</strong>.</li>
+<li>Focused on recent cohorts with available 10-year earnings.</li>
+</ul></li>
+<li><strong>Key variable groups:</strong>
+<ul>
+<li><strong>Cost:</strong> in-state &amp; out-of-state tuition, median debt.</li>
+<li><strong>Institutional:</strong> enrollment (UGDS), control, region, locale.</li>
+<li><strong>Outcomes:</strong> retention, 4-year completion, 10-year median earnings.</li>
+</ul></li>
+<li><strong>Missing data:</strong>
+<ul>
+<li>Dropped columns with severe missingness (e.g., detailed demographics).</li>
+<li>Dropped rows with missing core cost/outcome variables rather than imputing.</li>
+</ul></li>
+</ul>
+</section>
+<section id="exploratory-data-analysis" class="slide level2 smaller">
+<h2>Exploratory Data Analysis</h2>
+<ul>
+<li><strong>Cost:</strong>
+<ul>
+<li>In-state and out-of-state tuition are <strong>right-skewed</strong>.</li>
+<li>Most schools between ≈ $10K–$40K; a small number of very expensive institutions.</li>
+</ul></li>
+<li><strong>Size (UGDS):</strong>
+<ul>
+<li>Strong right skew; most enroll 1K–6K students.</li>
+<li>A few very large institutions (e.g., large online providers).</li>
+</ul></li>
+<li><strong>Outcomes:</strong>
+<ul>
+<li>Retention and completion rates are bounded [0,1] and cluster toward higher values.</li>
+<li>Identified and removed institutions with impossible patterns (e.g., 0% completion at all time horizons, 0% retention with missing context).</li>
+</ul></li>
+<li><strong>Earnings:</strong>
+<ul>
+<li>10-year earnings percentiles are skewed; <strong>median earnings</strong> used as a stable target.</li>
+</ul></li>
+</ul>
+</section>
+<section id="correlation-patterns" class="slide level2 smaller">
+<h2>Correlation Patterns</h2>
+<ul>
+<li>Tuition has <strong>only weak to moderate correlation</strong> with earnings.</li>
+<li>Retention and completion rates show <strong>moderate positive</strong> correlations with earnings.</li>
+<li>Pell Grant share (<strong>PCTPELL</strong>) shows <strong>negative</strong> correlations with both earnings and completion:
+<ul>
+<li>Institutions serving more low-income students tend to have lower median earnings.</li>
+</ul></li>
+<li>Takeaway: <strong>Institutional performance and student composition</strong> are more strongly related to outcomes than tuition alone.</li>
+</ul>
+</section>
+<section id="correlation-matrix-of-numerical-features" class="slide level2 smaller">
+<h2>Correlation Matrix of Numerical Features</h2>
+<div id="009161f5" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="8" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="737" height="556"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="regression-setup" class="slide level2 smaller">
+<h2>Regression Setup</h2>
+<ul>
+<li><strong>Target:</strong> Median earnings 10 years after enrollment (<strong>MD_EARN_WNE_P10</strong>).</li>
+<li><strong>Predictors:</strong>
+<ul>
+<li>Cost: TUITIONFEE_IN, TUITIONFEE_OUT, median debt.</li>
+<li>Institution: UGDS, region dummies, locale dummies, control dummies.</li>
+<li>Outcomes: retention and completion rates.</li>
+</ul></li>
+<li><strong>Preprocessing:</strong>
+<ul>
+<li>Log-transform skewed variables where appropriate.</li>
+<li>Standardize continuous predictors.</li>
+<li>One-hot encode categorical variables (region, locale, control).</li>
+</ul></li>
+</ul>
+</section>
+<section id="linear-regression-results" class="slide level2 smaller">
+<h2>Linear Regression Results</h2>
+<ul>
+<li><strong>Linear model (OLS):</strong>
+<ul>
+<li>Adjusted R² ≈ 0.57 — institutional features explain over half of the variation in 10-year earnings.</li>
+<li>Largest positive coefficients: in-state tuition, first-year retention, 4-year completion, and enrollment size.</li>
+<li>Largest negative coefficients: Pell Grant share (PCTPELL), median student debt, and several lower-earning regional indicators.</li>
+</ul></li>
+</ul>
+</section>
+<section id="linear-regression-results-1" class="slide level2 smaller">
+<h2>Linear Regression Results</h2>
+<div id="6e21fd43" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="8" data-execution_count="5">
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean Squared Error: 110300510.89
+R-squared: 0.4855</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-6-output-2.png" class="quarto-figure quarto-figure-center" width="1324" height="556"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ridge-regression-results" class="slide level2 smaller">
+<h2>Ridge Regression Results</h2>
+<ul>
+<li>Ridge regression refit with both tuition variables:
+<ul>
+<li>Similar R² (~0.49 on test data).</li>
+<li>Coefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).</li>
+<li>The largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).</li>
+</ul></li>
+<li><strong>Limitations:</strong>
+<ul>
+<li>Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.</li>
+</ul></li>
+</ul>
+</section>
+<section id="ridge-regression-results-1" class="slide level2 smaller">
+<h2>Ridge Regression Results</h2>
+<div id="4e98e408" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="6">
+<div class="cell-output cell-output-stdout">
+<pre><code>Ridge Regression:
+Mean Squared Error: 110226157.793066
+R-squared: 0.48583010161522244</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-7-output-2.png" class="quarto-figure quarto-figure-center" width="1325" height="556"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="feature-selection-for-classification" class="slide level2 smaller">
+<h2>Feature Selection for Classification</h2>
+<ul>
+<li><strong>Outcome for classification:</strong> High-earning vs.&nbsp;low-earning institution<br>
+(above vs.&nbsp;below sample median earnings).</li>
+<li><strong>Feature selection strategy:</strong>
+<ul>
+<li><strong>SelectKBest</strong> (f_classif) to identify top 15 statistically relevant predictors.</li>
+<li><strong>Random Forest feature importance</strong> to capture nonlinear effects and interactions.</li>
+<li>Final feature set = <strong>union</strong> of the top features from both methods.</li>
+</ul></li>
+<li><strong>Self-taught component:</strong>
+<ul>
+<li>Added <strong>permutation importance</strong> to quantify how much model performance drops when each feature is shuffled.</li>
+</ul></li>
+</ul>
+</section>
+<section id="selectkbest-feature-selection" class="slide level2">
+<h2>SelectKBest Feature Selection</h2>
+<div id="cc7352df" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="1026" height="535"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="permutation-importance-random-forest" class="slide level2 smaller">
+<h2>Permutation Importance (Random Forest)</h2>
+<ul>
+<li><strong>Top predictors for high-earning institutions:</strong>
+<ul>
+<li><strong>UGDS</strong> (student body size)</li>
+<li><strong>RET_FT4</strong> (first-year retention)</li>
+<li><strong>TUITIONFEE_OUT</strong> and <strong>TUITIONFEE_IN</strong></li>
+<li><strong>PCTPELL</strong> (share of Pell recipients)</li>
+<li>Regional indicators (e.g., Southeast, Mid East)</li>
+</ul></li>
+<li><strong>Low-impact features:</strong>
+<ul>
+<li>Many fine-grained locale categories</li>
+<li>Control type contributes relatively little once other factors are included.</li>
+</ul></li>
+<li><strong>Takeaway:</strong> Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting.</li>
+</ul>
+</section>
+<section id="permutation-importance" class="slide level2">
+<h2>Permutation Importance</h2>
+<div id="03011304" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-9-output-1.png" class="quarto-figure quarto-figure-center" width="940" height="556"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="logistic-regression-classification" class="slide level2 smaller">
+<h2>Logistic Regression Classification</h2>
+<ul>
+<li><strong>Model:</strong> Logistic regression with standardized predictors.</li>
+<li><strong>Performance:</strong>
+<ul>
+<li>Accuracy ≈ <strong>0.77</strong></li>
+<li>Precision ≈ <strong>0.78</strong></li>
+<li>Recall ≈ <strong>0.77</strong></li>
+<li>F1 ≈ <strong>0.77</strong></li>
+<li>5-fold CV F1 ≈ <strong>0.80</strong></li>
+</ul></li>
+<li><strong>Interpretation:</strong>
+<ul>
+<li>A simple linear decision boundary separates high- and low-earning institutions reasonably well.</li>
+<li>Coefficient patterns mirror regression results: retention, completion, tuition, and Pell share are key drivers.</li>
+</ul></li>
+</ul>
+</section>
+<section id="logistic-regression-results" class="slide level2 smaller">
+<h2>Logistic Regression Results</h2>
+<div id="a750b7e0" class="cell" data-fig-height="5" data-fig-responsive="false" data-fig-width="12" data-execution_count="9">
+<div class="cell-output cell-output-stdout">
+<pre><code>k-Fold F1-Score: 0.80
+k-Fold CV took 0.08 seconds
+
+Logistic Regression Accuracy: 0.7728813559322034
+Logistic Regression Precision: 0.7775823831391786
+Logisitc Regression Recall: 0.7728813559322034
+Logistic Regression F-1 Score: 0.7719854657317307</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-10-output-2.png" class="quarto-figure quarto-figure-center" width="1185" height="460"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="random-forest-classification" class="slide level2 smaller">
+<h2>Random Forest Classification</h2>
+<ul>
+<li><strong>Model:</strong> Random Forest classifier using the selected feature set.</li>
+<li><strong>Performance:</strong>
+<ul>
+<li>Accuracy ≈ <strong>0.78</strong></li>
+<li>Precision, Recall, F1 ≈ <strong>0.78</strong></li>
+<li>5-fold CV F1 ≈ <strong>0.80</strong></li>
+</ul></li>
+<li><strong>Insights:</strong>
+<ul>
+<li>Slightly better predictive performance than logistic regression.</li>
+<li>Captures nonlinear relationships and interactions among:
+<ul>
+<li>Enrollment size (UGDS)</li>
+<li>Retention and completion</li>
+<li>Tuition levels</li>
+<li>Pell share</li>
+<li>Certain regions</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="random-forest-results" class="slide level2 smaller">
+<h2>Random Forest Results</h2>
+<div id="e20c7129" class="cell" data-fig-height="5" data-fig-responsive="false" data-fig-width="12" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Cross Validation
+k-Fold F1-Score: 0.81
+k-Fold CV took 1.26 seconds
+Random Forest Accuracy: 0.7694915254237288
+Random Forest Precision: 0.7727836753728403
+Random Forest Recall: 0.7694915254237288
+Random Forest F-1 Score: 0.7688541748027805</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-11-output-2.png" class="quarto-figure quarto-figure-center" width="1223" height="460"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="calibration-probabilities-vs.-accuracy" class="slide level2 smaller">
+<h2>Calibration: Probabilities vs.&nbsp;Accuracy</h2>
+<div id="fd989769" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="7" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-12-output-1.png" class="quarto-figure quarto-figure-center" width="652" height="556"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="calibration-probabilities-vs.-accuracy-1" class="slide level2 smaller">
+<h2>Calibration: Probabilities vs.&nbsp;Accuracy</h2>
+<ul>
+<li><strong>Calibration curve comparison:</strong>
+<ul>
+<li><strong>Logistic Regression</strong>
+<ul>
+<li>Follows the 45° line closely → <strong>strong, smooth calibration</strong>.</li>
+<li>Predicted probabilities align well with observed frequencies.</li>
+</ul></li>
+<li><strong>Random Forest</strong>
+<ul>
+<li>Also tracks the ideal calibration line with only mild deviations.</li>
+<li>Slightly less smooth in the mid-range but still <strong>reasonably well calibrated</strong>.</li>
+</ul></li>
+</ul></li>
+<li><strong>Implication:</strong>
+<ul>
+<li>Both models provide reliable probability estimates, though Logistic Regression is <strong>the most consistently calibrated</strong>.</li>
+<li>Random Forest delivers slightly better classification accuracy, while Logistic Regression is preferred when <strong>probability precision and interpret</strong></li>
+</ul></li>
+</ul>
+</section>
+<section id="key-findings" class="slide level2 smaller">
+<h2>Key Findings</h2>
+<ul>
+<li>Higher tuition is associated with higher earnings, but:
+<ul>
+<li>Effects are modest and intertwined with other institutional features.</li>
+</ul></li>
+<li>Retention and completion rates are <strong>strong, consistent predictors</strong> of long-term earnings.</li>
+<li>Institutions with higher <strong>Pell Grant shares</strong> tend to have lower earnings, reflecting underlying socioeconomic differences.</li>
+<li>Model performance:
+<ul>
+<li>Linear and Ridge regression explain ~50–57% of earnings variation.</li>
+<li>Classification models distinguish high- vs low-earning institutions with F1 ≈ <strong>0.77–0.82</strong>.</li>
+</ul></li>
+<li>Student outcomes and composition matter at least as much as sticker price.</li>
+</ul>
+</section>
+<section id="limitations-future-work" class="slide level2 smaller">
+<h2>Limitations &amp; Future Work</h2>
+<ul>
+<li><strong>Data limitations:</strong>
+<ul>
+<li>Institution-level aggregates; no student-level or major-level detail.</li>
+<li>Missing data and reporting differences across institutions.</li>
+</ul></li>
+<li><strong>No causal claims:</strong>
+<ul>
+<li>Observational, cross-sectional analysis; cannot separate institution effect from selection bias.</li>
+</ul></li>
+<li><strong>Future directions:</strong>
+<ul>
+<li>Incorporate program and major details.</li>
+<li>Examine changes over time (longitudinal trends).</li>
+</ul></li>
+</ul>
+</section>
+<section id="takeaways" class="slide level2 smaller">
+<h2>Takeaways</h2>
+<ul>
+<li>Tuition alone is an incomplete indicator of value.</li>
+<li><strong>Academic success metrics</strong> (retention &amp; completion) and <strong>student demographics</strong> are central to explaining earnings.</li>
+<li>Machine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers.</li>
+</ul>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/INFO523-Fall25-101-201\.github\.io\/final-project-ava-lasater\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

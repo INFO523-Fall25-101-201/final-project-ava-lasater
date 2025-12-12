@@ -1,11 +1,18 @@
 ---
-title: "Proposal title"
+title: "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics"
 subtitle: "Proposal"
 author: 
-  - name: "Team Name - Team member 1, Team member 2,..."
+  - name: "Ava Lasater"
     affiliations:
       - name: "College of Information Science, University of Arizona"
-description: "Project description"
+description: "This project will analyze data from the U.S. Department of Education’s College Scorecard 
+(https://collegescorecard.ed.gov/data/) to explore how institutional and financial factors influence student outcomes 
+across U.S. colleges and universities. Specifically, it will investigate the relationship between cost of attendance and 
+key outcome metrics such as retention rates and post-graduation earnings. The working hypothesis is that higher tuition 
+combined with limited scholarship support is associated with lower student retention due to increased financial strain, 
+while institutions with higher tuition may exhibit higher post-graduation earnings due to factors such as institutional 
+prestige and resource availability. The financial burden associated with colllege is becoming increasingly heavy for young 
+people, and I am very curious to see what the relationship with student outcomes. "
 format:
   html:
     code-tools: true
@@ -20,9 +27,11 @@ jupyter: python3
 ---
 
 ```{python}
+#| echo: false
 #| label: load-pkgs
 #| message: false
 import numpy as np
+import pandas as pd
 ```
 
 ## Dataset
@@ -30,16 +39,108 @@ import numpy as np
 ```{python}
 #| label: load-dataset
 #| message: false
+
+df = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
+print(df.shape)
+
 ```
+This data contains institution-level data files for 1996-97 through 2022-23 containing aggregate data for each institution. Includes information on 
+institutional characteristics, enrollment, student aid, costs, and student outcomes. Field of study-level data files for the pooled 
+2014-15, 2015-16 award years through the pooled 2018-19, 2019-20 award years containing data at the credential level and 4-digit 
+CIP code combination for each institution. Includes information on cumulative debt at graduation and earnings one year after graduation. Essentially,
+this dataset holds a lot of information that can be used to understand student success, university statistics, and demographic information.
 
-A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
+Initialy, this dataset contains 3306 columns, and 6430 rows. Since this file is too large to load directly into Github, I am 
+working on solutions. Thus, I do have have robust numbers and have yet to clean and throw columns that I am not interested in. I
+will be retaining a lot of columns related to the cost of attendance, demographic information, and outcome metrics which indclude 
+salary metric, retention percentages, etc.
 
-Make sure to load the data and use inline code for some of this information.
+The columns I used are outlined below:
+Cost Variables:
+- TUITIONFEE_IN: In-state tuition and fees
+- TUITIONFEE_OUT: Out-of-state tuition and fees
+- NPT4_PUB: Average net price for Title IV institutions (public institutions)
+- NPT4_PRIV: Average net price for Title IV institutions (private institutions)
+- NPT41_PUB: Average net price for $0-$30,000 family income (public institutions)
+- NPT42_PUB: Average net price for $30,001-$48,000 family income (public institutions)
+- NPT43_PUB: Average net price for $48,001-$75,000 family income (public institutions)
+- NPT44_PUB: Average net price for $75,001-$110,000 family income (public institutions)
+- NPT45_PUB: Average net price for $110,000+ family income (public institutions)
+- NPT41_PRIV: Average net price for $0-$30,000 family income (private institutions)
+- NPT42_PRIV: Average net price for $30,001-$48,000 family income (private institutions)
+- NPT43_PRIV: Average net price for $48,001-$75,000 family income (private institutions)
+- NPT44_PRIV: Average net price for $75,001-$110,000 family income (private institutions)
+- NPT45_PRIV: Average net price for $110,000+ family income (private institutions)
+- ST_FIPS: State FIPS code for regional analysis
+- REGION: Region code for regional analysis
+- LOCALE: Locale code for regional analysis
+- LOCALE2: Detailed locale code for regional analysis
+- BOOKSUPPLY: Average cost of books and supplies
+- ROOMBOARD_ON: Average cost of room and board for on-campus students
+- OTHEREXPENSE_ON: Average other expenses for on-campus students
+- ROOMBOARD_OFF: Average cost of room and board for off-campus students
+- OTHEREXPENSE_OFF: Average other expenses for off-campus students
+- OTHEREXPENSE_FAM: Average other expenses for students living with family
+
+School Prestige/Quality Variables:
+- INSTNM: Institution name
+- CITY: City where the institution is located
+- CONTROL: Control of institution (public, private non-profit, private for-profit)
+- PREDDEG: Predominant degree awarded
+- ADM_RATE: Admission rate
+- SAT_AVG: Average SAT score of admitted students
+- UGDS: Number of undergraduate students
+- PCTPELL: Percentage of undergraduate students receiving Pell Grants
+- PCTFLOAN: Percentage of undergraduate students receiving federal student loans
+- ENDOWBEGIN: Endowment at the beginning of the fiscal year
+- ENDOWEND: Endowment at the end of the fiscal year
+- STUFACR: Undergraduate student-to-faculty ratio   
+
+Outcome Variables:
+- C150_4: Completion rate for first-time, full-time students at four-year institutions (150% of expected time to completion)
+- RET_FT4: Retention rate for first-time, full-time students after four years
+- C200_4: Completion rate for first-time, full-time students at four-year institutions (200% of expected time to completion)
+- COMP_ORIG_YR4_RT: Completion rate for first-time, full-time students who received federal student aid within four years
+- COMP_ORIG_YR6_RT: Completion rate for first-time, full-time students who received federal student aid within six years
+- RPY_1YR_RT: Fraction of repayment cohort who are not in default, and with loan balances that have declined one year since entering repayment, excluding enrolled and military deferment from calculation. (Rolling averages)
+- COMPL_RPY_1YR_RT: One-year repayment rate for completers
+- GRAD_DEBT_MDN: The median debt for students who have completed
+- LO_INC_DEBT_MDN: The median debt for students with family income between $0-$30,000
+- MD_INC_DEBT_MDN: The median debt for students with family income between $30,001-$75,000
+- HI_INC_DEBT_MDN: The median debt for students with family income above $75,000
+- MD_EARN_WNE_P10: Mean earnings of students working and not enrolled 10 years after entry
+- PCT10_EARN_WNE_P10: 10th percentile earnings of students working and not enrolled 10 years after entry
+- PCT25_EARN_WNE_P10: 25th percentile earnings of students working and not enrolled 10 years after entry
+- PCT75_EARN_WNE_P10: 75th percentile earnings of students working and not enrolled 10 years after entry
+- PCT90_EARN_WNE_P10: 90th percentile earnings of students working and not enrolled 10 years after entry
+- MD_EARN_WNE_P6: Mean earnings of students working and not enrolled 6 years after entry
+- PCT10_EARN_WNE_P6: 10th percentile earnings of students working and not enrolled 6 years after entry
+- PCT25_EARN_WNE_P6: 25th percentile earnings of students working and not enrolled 6 years after entry
+- PCT75_EARN_WNE_P6: 75th percentile earnings of students working and not enrolled 6 years after entry
+- PCT90_EARN_WNE_P6: 90th percentile earnings of students working and not enrolled 6 years after entry
+- C100_4: Completion rate for first-time, full-time students at four-year institutions (100% of expected time to completion)
+
+I chose this dataset because it allows me to directly link financial inputs (tuition and aid) with student outcomes (retention 
+and earnings), helping to uncover whether affordability or institutional prestige has a stronger effect on student success. Additionally, this dataset holds so much
+interesting data, and I am interested in a lot of these columns. However, I will need to balance the number of columns I look at and the my main goals for the project.
+
+
 
 ## Questions
 
 The two questions you want to answer.
 
+1. How does average cost of attendance aid affects student retention rates at institutions with different tuition levels?
+
+2. Is there a relationship between institutional tuition and post-graduation earnings, and does this differ by institution 
+type (public, private nonprofit, for-profit)?
+
 ## Analysis plan
 
--   A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
+To answer the first question, I will be looking at the average net prices and retention. There are multiple columns for each of these
+factors in the dataset. Next, there are several breakdowns concerning the percentage of student working after graduation. I will use this 
+data and compare the type of institution and the tuition to see if there is a relationship. I plan on doing an EDA and determining which 
+factors specifically I want to focus on, then I will perform a linear regression if that makes sense for the data, or other forms of 
+quantitative analysis in order to determine a relationship.
+
+

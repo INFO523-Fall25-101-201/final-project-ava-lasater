@@ -1,11 +1,11 @@
 ---
-title: "Project Title"
+title: "Predicting Post-Graduation Earnings Using Tuition, Institutional Metrics, and Student Demographics"
 subtitle: "INFO 523 - Final Project"
 author: 
-  - name: "Team name - Team member 1, Team member 2,..."
+  - name: "Ava Lasater"
     affiliations:
       - name: "College of Information Science, University of Arizona"
-description: "Project description"
+description: "A data-driven analysis of how tuition, institutional characteristics, and student demographics shape post-graduation earnings across U.S. colleges, using regression and machine-learning models to identify the strongest predictors of student economic outcomes."
 format:
    html:
     code-tools: true
@@ -18,6 +18,177 @@ execute:
 jupyter: python3
 ---
 
-## Abstract
+```{python}
+#| label: load-packages
+#| include: false
 
-Add project abstract here.
+# Load packages here
+# core libraries
+import pandas as pd
+import numpy as np
+import math
+import time
+
+# Visualization
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pandas.plotting import scatter_matrix
+from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
+from sklearn.calibration import CalibrationDisplay
+from sklearn.tree import plot_tree
+
+# Statistical Analysis
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+# Preprocessing
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder, label_binarize
+
+# Feature Selection
+from sklearn.feature_selection import SelectKBest, f_classif
+
+# Model Selection
+from sklearn.model_selection import (
+    train_test_split,
+    cross_val_score,
+    KFold,
+    LeaveOneOut
+)
+
+# Regression Models
+from sklearn.linear_model import (
+    LinearRegression,
+    Ridge, RidgeCV,
+    Lasso, LassoCV,
+    ElasticNet, ElasticNetCV,
+    LogisticRegression
+)
+
+# Classification Models
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+
+# Dimensionality Reduction
+from sklearn.decomposition import PCA
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.pipeline import Pipeline
+
+# Metrics
+from sklearn.metrics import (
+    mean_squared_error,
+    r2_score,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_curve,
+    auc,
+    roc_auc_score,
+    confusion_matrix
+)
+
+# Model Interpretation
+from sklearn.inspection import permutation_importance
+
+
+```
+
+```{python}
+#| label: setup
+#| include: false
+# Set up plot theme and figure resolution
+sns.set_theme(style="whitegrid")
+sns.set_context("notebook", font_scale=1.1)
+
+```
+
+```{python}
+# Load data in Python
+
+college_data = pd.read_csv('/workspaces/final-project-ava-lasater/data/CollegeScorecard_Cleaned.csv')
+
+college_data_ND = college_data.drop_duplicates()
+selected_columns = ['TUITIONFEE_IN', 'TUITIONFEE_OUT', 'NPT4_PUB', 'NPT4_PRIV', 'NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'ST_FIPS', 'REGION', 'LOCALE', 'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON',
+                    'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'CONTROL', 'PREDDEG', 'ADM_RATE', 'UGDS',  'LOCALE2',
+                    'PCTPELL', 'PCTFLOAN',  'ENDOWBEGIN', 'ENDOWEND', 'STUFACR', 'SAT_AVG',
+                    'C150_4', 'COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                    'RPY_1YR_RT',  'COMPL_RPY_1YR_RT',  'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                    'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',  'MD_EARN_WNE_P10',  'PCT10_EARN_WNE_P10',
+                    'PCT25_EARN_WNE_P10',  'PCT75_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',  'MD_EARN_WNE_P6',
+                    'PCT10_EARN_WNE_P6',  'PCT25_EARN_WNE_P6',  'PCT75_EARN_WNE_P6',  'PCT90_EARN_WNE_P6',  'C100_4', 'INSTNM', 'CITY', 'RET_FT4', 'C200_4'] 
+college_data_selected = college_data_ND[selected_columns]
+college_data_selected = college_data_selected[college_data_ND['PREDDEG'] == 3]
+should_be_numeric_columns = ['COMP_ORIG_YR4_RT',  'COMP_ORIG_YR6_RT',
+                   'GRAD_DEBT_MDN',  'LO_INC_DEBT_MDN',
+                   'MD_INC_DEBT_MDN',  'HI_INC_DEBT_MDN',
+                   'PCT10_EARN_WNE_P10',  'PCT90_EARN_WNE_P10',
+                   'PCT10_EARN_WNE_P6',  'PCT90_EARN_WNE_P6']
+for col in should_be_numeric_columns:
+    college_data_selected[col] = pd.to_numeric(college_data_selected[col], errors='coerce') 
+college_data_selected_v2 = college_data_selected.drop(columns=['NPT41_PUB', 'NPT42_PUB', 'NPT43_PUB', 'NPT44_PUB', 'NPT45_PUB',
+                    'NPT41_PRIV', 'NPT42_PRIV', 'NPT43_PRIV', 'NPT44_PRIV', 'NPT45_PRIV', 'NPT4_PUB', 'NPT4_PRIV', 'LOCALE2',
+                    'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF', 'OTHEREXPENSE_FAM', 'BOOKSUPPLY', 
+                    'ENDOWBEGIN', 'ENDOWEND', 'ADM_RATE', 'RPY_1YR_RT', 'COMPL_RPY_1YR_RT', 'SAT_AVG', 'PREDDEG'])
+college_final = college_data_selected_v2.dropna()
+```
+
+## Abstract
+Increasing concern about the cost and value of higher education has increased interest in understanding how institutional characteristics, and cost relate to student outcomes, particularly earning after graduation. This project uses institution-level data from the U.S. Department of Education’s College Scorecard to investigate how tuition, institutional features, and student enrollment are associated with median earnings 10 years after enrollment. Additionally, it aims to assess the extent to which these variables can predict higher-earning graduates. 
+
+The dataset is restricted to institutions that primarily award bachelor’s degrees, and report complete information on 10-year earnings and core cost and outcome variables. After filtering and cleaning, the resulting sample retains a diverse set of institutions across regions, control types, and locale categories. To model earnings as a continuous outcome, the project applies both ordinary least squares (OLS) and Ridge regression. The OLS model explains a substantial portion of the variation in 10-year earnings, with retention, completion, and in-state tuition emerging as strong positive predictors, and median debt and Pell share showing negative associations. Ridge regression provides comparable predictive accuracy while better handling multicollinearity among financial variables.
+
+A classification task reframes the problem by labeling institutions as high-earning or low-earning relative to the sample median. Feature selection using statistical tests, random forest importance, and permutation importance identifies a consistent set of influential predictors, including enrollment size, retention, completion, tuition, and Pell share. Logistic regression and random forest models are then trained on the selected feature set. Both models achieve strong performance, with F1 scores around 0.77–0.82. Calibration curves show that each model produces reasonably reliable probability estimates, with logistic regression slightly smoother and more aligned with observed frequencies.
+
+Overall, the results suggest that while tuition contributes to differences in earnings, institutional performance indicators and student composition play a larger role. Earnings outcomes reflect a combination of institutional characteristics and the demographic and academic profile of the students they serve, highlighting the complexity of evaluating value in higher education.
+
+***
+
+#### Research Questions
+How do tuition and financial burden relate to student retention and post-graduation earnings?
+
+Which institutional characteristics (e.g., region, locale, control, enrollment size) most strongly predict earnings outcomes?
+
+Can institutional features be used to classify colleges into high-earning and low-earning groups?
+
+Which features provide the strongest predictive signal across linear and machine-learning models?
+
+#### Methods Used
+##### Preprocessing
+- Combined split CSV filed due to GitHub upload limits
+- Filtered to primarily bachelor's degree-granting schools
+- Removed columns with high missingness
+- Scaled and log-transformed select variables
+- One-hot encoded region, locale, and control categories
+
+##### EDA
+- Historgrams of all numeric variables
+- Correlation heatmap
+- Distribution checks of region, state, locale, and control
+- Identification of skewed variables and outliers
+
+##### Regression Models
+- Multiple Linear Regression
+- Ridge Regression
+- Diagnoistic plots
+
+##### Classification Models
+- Feature selection using SelectKBest
+- Random forest feature importance
+- Permutation importance (self-taught extension)
+- Logistic Regression
+- Random Forest Classifier
+- Evaluation plots (self-taught extension)
+
+#### Key Findings
+- Tuition has a positive but moderate association with long-term earnings.
+- Retention and completion rates are among the strongest predictors of earnings.
+- Pell Grant percentage is strongly negatively associated with earnings, reflecting socioeconomic patterns.
+- Classification models achieve 77–82% accuracy.
+- Institution size (UGDS), retention, completion, tuition, and socioeconomic mix provide the strongest predictive signal.
+- Locale categories and school control type add minimal predictive value once other variables are included.
+
+#### Data Source
+U.S. Department of Education, Office of Federal Student Aid. College Scorecard Data. https://collegescorecard.ed.gov/data/
