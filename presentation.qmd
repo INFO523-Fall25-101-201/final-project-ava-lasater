@@ -523,7 +523,6 @@ perm_importances = pd.Series(
 
 # look at the top 15
 top_perm = perm_importances.head(15)
-print(top_perm)
 
 # plot the top 15 permutation importances
 plt.figure(figsize=(10, 6))
