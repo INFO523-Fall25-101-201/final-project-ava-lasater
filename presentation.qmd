@@ -475,10 +475,6 @@ plt.title('Top 15 Feature Importances (Random Forest)')
 plt.xlabel('Importance Score')
 plt.ylabel('Feature')
 plt.show()
-
-final_features = list(set(selected_features) | set(top_importances.index))
-X_final = X[final_features].copy()
-
 ```
 
 ***
@@ -533,6 +529,8 @@ plt.title("Top 15 Features by Permutation Importance (Random Forest)")
 plt.tight_layout()
 plt.show()
 
+final_features = list(set(selected_features) | set(top_importances.index))
+X_final = X[final_features].copy()
 ```
 
 ***
