@@ -109,7 +109,7 @@
     "href": "presentation.html#permutation-importance",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Permutation Importance",
-    "text": "Permutation Importance\n\n\nTUITIONFEE_IN             0.0\nTUITIONFEE_OUT            0.0\nGRAD_DEBT_MDN             0.0\nRET_FT4                   0.0\nC100_4                    0.0\nPCTPELL                   0.0\nUGDS                      0.0\nREGION_Mid East           0.0\nREGION_Great Lakes        0.0\nREGION_Plains             0.0\nREGION_Southeast          0.0\nREGION_Southwest          0.0\nREGION_Rocky Mountains    0.0\nREGION_Far West           0.0\nREGION_Outlying Areas     0.0\ndtype: float64"
+    "text": "Permutation Importance"
   },
   {
     "objectID": "presentation.html#logistic-regression-classification",
@@ -123,7 +123,7 @@
     "href": "presentation.html#logistic-regression-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Logistic Regression Results",
-    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.08 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
+    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.14 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
   },
   {
     "objectID": "presentation.html#random-forest-classification",
@@ -137,7 +137,7 @@
     "href": "presentation.html#random-forest-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Results",
-    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.11 seconds\nRandom Forest Accuracy: 0.7559322033898305\nRandom Forest Precision: 0.7571697903612158\nRandom Forest Recall: 0.7559322033898305\nRandom Forest F-1 Score: 0.7556795568392357"
+    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.08 seconds\nRandom Forest Accuracy: 0.7627118644067796\nRandom Forest Precision: 0.7659258699084007\nRandom Forest Recall: 0.7627118644067796\nRandom Forest F-1 Score: 0.762055768179333"
   },
   {
     "objectID": "presentation.html#calibration-probabilities-vs.-accuracy",
