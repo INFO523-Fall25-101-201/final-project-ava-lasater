@@ -105,6 +105,13 @@
     "text": "Permutation Importance (Random Forest)\n\nTop predictors for high-earning institutions:\n\nUGDS (student body size)\nRET_FT4 (first-year retention)\nTUITIONFEE_OUT and TUITIONFEE_IN\nPCTPELL (share of Pell recipients)\nRegional indicators (e.g., Southeast, Mid East)\n\nLow-impact features:\n\nMany fine-grained locale categories\nControl type contributes relatively little once other factors are included.\n\nTakeaway: Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting."
   },
   {
+    "objectID": "presentation.html#permutation-importance",
+    "href": "presentation.html#permutation-importance",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Permutation Importance",
+    "text": "Permutation Importance"
+  },
+  {
     "objectID": "presentation.html#logistic-regression-classification",
     "href": "presentation.html#logistic-regression-classification",
     "title": "Predicting Post-Graduation Earnings",
@@ -130,7 +137,7 @@
     "href": "presentation.html#random-forest-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Results",
-    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.16 seconds\nRandom Forest Accuracy: 0.7694915254237288\nRandom Forest Precision: 0.772014650403106\nRandom Forest Recall: 0.7694915254237288\nRandom Forest F-1 Score: 0.7690085128238753"
+    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.26 seconds\nRandom Forest Accuracy: 0.7694915254237288\nRandom Forest Precision: 0.7727836753728403\nRandom Forest Recall: 0.7694915254237288\nRandom Forest F-1 Score: 0.7688541748027805"
   },
   {
     "objectID": "presentation.html#calibration-probabilities-vs.-accuracy",
