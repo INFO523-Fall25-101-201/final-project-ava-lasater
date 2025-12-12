@@ -185,57 +185,6 @@ Ava Lasater
 </ul></li>
 </ul>
 </section>
-<section id="sample-structure-check" class="slide level2 smaller">
-<h2>Sample Structure Check</h2>
-<ul>
-<li>Compared <strong>original vs.&nbsp;cleaned</strong> distributions for:
-<ul>
-<li>State, region, locale, and control type.</li>
-</ul></li>
-<li><strong>Result:</strong> Filtering and missing-data removal:
-<ul>
-<li>Did <strong>not</strong> wipe out any region or control group.</li>
-<li>Preserved a broad mix of public and private institutions across the U.S.</li>
-</ul></li>
-<li>Interpretation: The cleaned dataset still represents a diverse institutional landscape.</li>
-</ul>
-</section>
-<section id="distribution-of-institutions-by-region" class="slide level2 smaller">
-<h2>Distribution of Institutions by Region</h2>
-<div id="801093df" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="4">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="940" height="556"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="distribution-of-institutions-by-locale" class="slide level2 smaller">
-<h2>Distribution of Institutions by Locale</h2>
-<div id="7727b633" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="5">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-6-output-1.png" class="quarto-figure quarto-figure-center" width="940" height="556"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="distribution-of-institutions-by-control" class="slide level2 smaller">
-<h2>Distribution of Institutions by Control</h2>
-<div id="10f18027" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="6">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-7-output-1.png" class="quarto-figure quarto-figure-center" width="940" height="556"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 <section id="exploratory-data-analysis" class="slide level2 smaller">
 <h2>Exploratory Data Analysis</h2>
 <ul>
@@ -274,11 +223,11 @@ Ava Lasater
 </section>
 <section id="correlation-matrix-of-numerical-features" class="slide level2 smaller">
 <h2>Correlation Matrix of Numerical Features</h2>
-<div id="424f35c4" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="8" data-execution_count="7">
+<div id="c2e41a94" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="8" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="737" height="556"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-5-output-1.png" class="quarto-figure quarto-figure-center" width="737" height="556"></p>
 </figure>
 </div>
 </div>
@@ -302,8 +251,8 @@ Ava Lasater
 </ul></li>
 </ul>
 </section>
-<section id="linear-ridge-regression-results" class="slide level2 smaller">
-<h2>Linear &amp; Ridge Regression Results</h2>
+<section id="linear-regression-results" class="slide level2 smaller">
+<h2>Linear Regression Results</h2>
 <ul>
 <li><strong>Linear model (OLS):</strong>
 <ul>
@@ -311,25 +260,11 @@ Ava Lasater
 <li>Largest positive coefficients: in-state tuition, first-year retention, 4-year completion, and enrollment size.</li>
 <li>Largest negative coefficients: Pell Grant share (PCTPELL), median student debt, and several lower-earning regional indicators.</li>
 </ul></li>
-<li><strong>Multicollinearity:</strong>
-<ul>
-<li>High VIF for tuition variables → removed out-of-state tuition for OLS.</li>
-<li>Ridge regression refit with both tuition variables:
-<ul>
-<li>Similar R² (~0.49 on test data).</li>
-<li>Coefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).</li>
-<li>The largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).</li>
-</ul></li>
-</ul></li>
-<li><strong>Limitations:</strong>
-<ul>
-<li>Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.</li>
-</ul></li>
 </ul>
 </section>
-<section id="linear-regression-results" class="slide level2 smaller">
+<section id="linear-regression-results-1" class="slide level2 smaller">
 <h2>Linear Regression Results</h2>
-<div id="1a8a2d34" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="8" data-execution_count="8">
+<div id="9fed63d7" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="8" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>Mean Squared Error: 110300510.89
 R-squared: 0.4855</code></pre>
@@ -337,7 +272,7 @@ R-squared: 0.4855</code></pre>
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-9-output-2.png" class="quarto-figure quarto-figure-center" width="1324" height="556"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-6-output-2.png" class="quarto-figure quarto-figure-center" width="1324" height="556"></p>
 </figure>
 </div>
 </div>
@@ -345,7 +280,22 @@ R-squared: 0.4855</code></pre>
 </section>
 <section id="ridge-regression-results" class="slide level2 smaller">
 <h2>Ridge Regression Results</h2>
-<div id="535bed27" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="9">
+<ul>
+<li>Ridge regression refit with both tuition variables:
+<ul>
+<li>Similar R² (~0.49 on test data).</li>
+<li>Coefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).</li>
+<li>The largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).</li>
+</ul></li>
+<li><strong>Limitations:</strong>
+<ul>
+<li>Residuals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation.</li>
+</ul></li>
+</ul>
+</section>
+<section id="ridge-regression-results-1" class="slide level2 smaller">
+<h2>Ridge Regression Results</h2>
+<div id="71c310a7" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="6">
 <div class="cell-output cell-output-stdout">
 <pre><code>Ridge Regression:
 Mean Squared Error: 110226157.793066
@@ -354,7 +304,7 @@ R-squared: 0.48583010161522244</code></pre>
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-10-output-2.png" class="quarto-figure quarto-figure-center" width="1325" height="556"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-7-output-2.png" class="quarto-figure quarto-figure-center" width="1325" height="556"></p>
 </figure>
 </div>
 </div>
@@ -379,11 +329,60 @@ R-squared: 0.48583010161522244</code></pre>
 </section>
 <section id="selectkbest-feature-selection" class="slide level2">
 <h2>SelectKBest Feature Selection</h2>
-<div id="639c84f8" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="10">
+<div id="06feda4f" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-11-output-1.png" class="quarto-figure quarto-figure-center" width="1026" height="535"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-8-output-1.png" class="quarto-figure quarto-figure-center" width="1026" height="535"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="permutation-importance-random-forest" class="slide level2 smaller">
+<h2>Permutation Importance (Random Forest)</h2>
+<ul>
+<li><strong>Top predictors for high-earning institutions:</strong>
+<ul>
+<li><strong>UGDS</strong> (student body size)</li>
+<li><strong>RET_FT4</strong> (first-year retention)</li>
+<li><strong>TUITIONFEE_OUT</strong> and <strong>TUITIONFEE_IN</strong></li>
+<li><strong>PCTPELL</strong> (share of Pell recipients)</li>
+<li>Regional indicators (e.g., Southeast, Mid East)</li>
+</ul></li>
+<li><strong>Low-impact features:</strong>
+<ul>
+<li>Many fine-grained locale categories</li>
+<li>Control type contributes relatively little once other factors are included.</li>
+</ul></li>
+<li><strong>Takeaway:</strong> Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting.</li>
+</ul>
+</section>
+<section id="permutation-importance" class="slide level2">
+<h2>Permutation Importance</h2>
+<div id="dcb95970" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="8">
+<div class="cell-output cell-output-stdout">
+<pre><code>TUITIONFEE_IN             0.0
+TUITIONFEE_OUT            0.0
+GRAD_DEBT_MDN             0.0
+RET_FT4                   0.0
+C100_4                    0.0
+PCTPELL                   0.0
+UGDS                      0.0
+REGION_Mid East           0.0
+REGION_Great Lakes        0.0
+REGION_Plains             0.0
+REGION_Southeast          0.0
+REGION_Southwest          0.0
+REGION_Rocky Mountains    0.0
+REGION_Far West           0.0
+REGION_Outlying Areas     0.0
+dtype: float64</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-9-output-2.png" class="quarto-figure quarto-figure-center" width="940" height="556"></p>
 </figure>
 </div>
 </div>
@@ -410,10 +409,10 @@ R-squared: 0.48583010161522244</code></pre>
 </section>
 <section id="logistic-regression-results" class="slide level2 smaller">
 <h2>Logistic Regression Results</h2>
-<div id="36c38d65" class="cell" data-fig-height="5" data-fig-responsive="false" data-fig-width="12" data-execution_count="11">
+<div id="3fa18828" class="cell" data-fig-height="5" data-fig-responsive="false" data-fig-width="12" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
 <pre><code>k-Fold F1-Score: 0.80
-k-Fold CV took 0.10 seconds
+k-Fold CV took 0.08 seconds
 
 Logistic Regression Accuracy: 0.7728813559322034
 Logistic Regression Precision: 0.7775823831391786
@@ -423,7 +422,7 @@ Logistic Regression F-1 Score: 0.7719854657317307</code></pre>
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-12-output-2.png" class="quarto-figure quarto-figure-center" width="1185" height="460"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-10-output-2.png" class="quarto-figure quarto-figure-center" width="1185" height="460"></p>
 </figure>
 </div>
 </div>
@@ -455,51 +454,20 @@ Logistic Regression F-1 Score: 0.7719854657317307</code></pre>
 </section>
 <section id="random-forest-results" class="slide level2 smaller">
 <h2>Random Forest Results</h2>
-<div id="2ba9c219" class="cell" data-fig-height="5" data-fig-responsive="false" data-fig-width="12" data-execution_count="12">
+<div id="ff3c58b9" class="cell" data-fig-height="5" data-fig-responsive="false" data-fig-width="12" data-execution_count="10">
 <div class="cell-output cell-output-stdout">
 <pre><code>Random Forest Cross Validation
 k-Fold F1-Score: 0.81
-k-Fold CV took 1.06 seconds
-Random Forest Accuracy: 0.7694915254237288
-Random Forest Precision: 0.7703288291806608
-Random Forest Recall: 0.7694915254237288
-Random Forest F-1 Score: 0.7693431112108853</code></pre>
+k-Fold CV took 1.11 seconds
+Random Forest Accuracy: 0.7559322033898305
+Random Forest Precision: 0.7571697903612158
+Random Forest Recall: 0.7559322033898305
+Random Forest F-1 Score: 0.7556795568392357</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-13-output-2.png" class="quarto-figure quarto-figure-center" width="1220" height="460"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="permutation-importance-random-forest" class="slide level2 smaller">
-<h2>Permutation Importance (Random Forest)</h2>
-<ul>
-<li><strong>Top predictors for high-earning institutions:</strong>
-<ul>
-<li><strong>UGDS</strong> (student body size)</li>
-<li><strong>RET_FT4</strong> (first-year retention)</li>
-<li><strong>TUITIONFEE_OUT</strong> and <strong>TUITIONFEE_IN</strong></li>
-<li><strong>PCTPELL</strong> (share of Pell recipients)</li>
-<li>Regional indicators (e.g., Southeast, Mid East)</li>
-</ul></li>
-<li><strong>Low-impact features:</strong>
-<ul>
-<li>Many fine-grained locale categories</li>
-<li>Control type contributes relatively little once other factors are included.</li>
-</ul></li>
-<li><strong>Takeaway:</strong> Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting.</li>
-</ul>
-</section>
-<section id="permutation-importance" class="slide level2">
-<h2>Permutation Importance</h2>
-<div id="6672e30d" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="10" data-execution_count="13">
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-14-output-1.png" class="quarto-figure quarto-figure-center" width="941" height="556"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-11-output-2.png" class="quarto-figure quarto-figure-center" width="1220" height="460"></p>
 </figure>
 </div>
 </div>
@@ -507,11 +475,11 @@ Random Forest F-1 Score: 0.7693431112108853</code></pre>
 </section>
 <section id="calibration-probabilities-vs.-accuracy" class="slide level2 smaller">
 <h2>Calibration: Probabilities vs.&nbsp;Accuracy</h2>
-<div id="6e11c58d" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="7" data-execution_count="14">
+<div id="28a68c88" class="cell" data-fig-height="6" data-fig-responsive="false" data-fig-width="7" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-15-output-1.png" class="quarto-figure quarto-figure-center" width="652" height="556"></p>
+<p><img data-src="presentation_files/figure-revealjs/cell-12-output-1.png" class="quarto-figure quarto-figure-center" width="652" height="556"></p>
 </figure>
 </div>
 </div>
@@ -571,8 +539,7 @@ Random Forest F-1 Score: 0.7693431112108853</code></pre>
 </ul></li>
 <li><strong>Future directions:</strong>
 <ul>
-<li>Incorporate program/major mix and selectivity.</li>
-<li>Explore causal methods or matching designs.</li>
+<li>Incorporate program and major details.</li>
 <li>Examine changes over time (longitudinal trends).</li>
 </ul></li>
 </ul>
@@ -583,7 +550,6 @@ Random Forest F-1 Score: 0.7693431112108853</code></pre>
 <li>Tuition alone is an incomplete indicator of value.</li>
 <li><strong>Academic success metrics</strong> (retention &amp; completion) and <strong>student demographics</strong> are central to explaining earnings.</li>
 <li>Machine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers.</li>
-<li>For policy, student advising, or institutional benchmarking, interpreting <strong>both cost and outcomes</strong> together is essential.</li>
 </ul>
 
 

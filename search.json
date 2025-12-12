@@ -28,34 +28,6 @@
     "text": "Data & Preprocessing\n\nSource: U.S. College Scorecard (institution-level data).\nScope:\n\nFiltered to institutions that primarily award bachelor’s degrees.\nFocused on recent cohorts with available 10-year earnings.\n\nKey variable groups:\n\nCost: in-state & out-of-state tuition, median debt.\nInstitutional: enrollment (UGDS), control, region, locale.\nOutcomes: retention, 4-year completion, 10-year median earnings.\n\nMissing data:\n\nDropped columns with severe missingness (e.g., detailed demographics).\nDropped rows with missing core cost/outcome variables rather than imputing."
   },
   {
-    "objectID": "presentation.html#sample-structure-check",
-    "href": "presentation.html#sample-structure-check",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Sample Structure Check",
-    "text": "Sample Structure Check\n\nCompared original vs. cleaned distributions for:\n\nState, region, locale, and control type.\n\nResult: Filtering and missing-data removal:\n\nDid not wipe out any region or control group.\nPreserved a broad mix of public and private institutions across the U.S.\n\nInterpretation: The cleaned dataset still represents a diverse institutional landscape."
-  },
-  {
-    "objectID": "presentation.html#distribution-of-institutions-by-region",
-    "href": "presentation.html#distribution-of-institutions-by-region",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Distribution of Institutions by Region",
-    "text": "Distribution of Institutions by Region"
-  },
-  {
-    "objectID": "presentation.html#distribution-of-institutions-by-locale",
-    "href": "presentation.html#distribution-of-institutions-by-locale",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Distribution of Institutions by Locale",
-    "text": "Distribution of Institutions by Locale"
-  },
-  {
-    "objectID": "presentation.html#distribution-of-institutions-by-control",
-    "href": "presentation.html#distribution-of-institutions-by-control",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Distribution of Institutions by Control",
-    "text": "Distribution of Institutions by Control"
-  },
-  {
     "objectID": "presentation.html#exploratory-data-analysis",
     "href": "presentation.html#exploratory-data-analysis",
     "title": "Predicting Post-Graduation Earnings",
@@ -84,15 +56,15 @@
     "text": "Regression Setup\n\nTarget: Median earnings 10 years after enrollment (MD_EARN_WNE_P10).\nPredictors:\n\nCost: TUITIONFEE_IN, TUITIONFEE_OUT, median debt.\nInstitution: UGDS, region dummies, locale dummies, control dummies.\nOutcomes: retention and completion rates.\n\nPreprocessing:\n\nLog-transform skewed variables where appropriate.\nStandardize continuous predictors.\nOne-hot encode categorical variables (region, locale, control)."
   },
   {
-    "objectID": "presentation.html#linear-ridge-regression-results",
-    "href": "presentation.html#linear-ridge-regression-results",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Linear & Ridge Regression Results",
-    "text": "Linear & Ridge Regression Results\n\nLinear model (OLS):\n\nAdjusted R² ≈ 0.57 — institutional features explain over half of the variation in 10-year earnings.\nLargest positive coefficients: in-state tuition, first-year retention, 4-year completion, and enrollment size.\nLargest negative coefficients: Pell Grant share (PCTPELL), median student debt, and several lower-earning regional indicators.\n\nMulticollinearity:\n\nHigh VIF for tuition variables → removed out-of-state tuition for OLS.\nRidge regression refit with both tuition variables:\n\nSimilar R² (~0.49 on test data).\nCoefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).\nThe largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).\n\n\nLimitations:\n\nResiduals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation."
-  },
-  {
     "objectID": "presentation.html#linear-regression-results",
     "href": "presentation.html#linear-regression-results",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Linear Regression Results",
+    "text": "Linear Regression Results\n\nLinear model (OLS):\n\nAdjusted R² ≈ 0.57 — institutional features explain over half of the variation in 10-year earnings.\nLargest positive coefficients: in-state tuition, first-year retention, 4-year completion, and enrollment size.\nLargest negative coefficients: Pell Grant share (PCTPELL), median student debt, and several lower-earning regional indicators."
+  },
+  {
+    "objectID": "presentation.html#linear-regression-results-1",
+    "href": "presentation.html#linear-regression-results-1",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Linear Regression Results",
     "text": "Linear Regression Results\n\n\nMean Squared Error: 110300510.89\nR-squared: 0.4855"
@@ -100,6 +72,13 @@
   {
     "objectID": "presentation.html#ridge-regression-results",
     "href": "presentation.html#ridge-regression-results",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Ridge Regression Results",
+    "text": "Ridge Regression Results\n\nRidge regression refit with both tuition variables:\n\nSimilar R² (~0.49 on test data).\nCoefficient plot shows the larget positive effects for TUITIONFEE_IN, RET_FT4, C100_4, (completion), TUITIONFEE_OUT, and UGDS (enrollment size).\nThe largest negative effects come from PCTPELL and indicators for certain regions (e.g., outlying areas, Rocky Mountains, Southeast).\n\nLimitations:\n\nResiduals show curvature, heteroscedasticity, and heavy tails → linear model is an approximation."
+  },
+  {
+    "objectID": "presentation.html#ridge-regression-results-1",
+    "href": "presentation.html#ridge-regression-results-1",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Ridge Regression Results",
     "text": "Ridge Regression Results\n\n\nRidge Regression:\nMean Squared Error: 110226157.793066\nR-squared: 0.48583010161522244"
@@ -119,6 +98,20 @@
     "text": "SelectKBest Feature Selection"
   },
   {
+    "objectID": "presentation.html#permutation-importance-random-forest",
+    "href": "presentation.html#permutation-importance-random-forest",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Permutation Importance (Random Forest)",
+    "text": "Permutation Importance (Random Forest)\n\nTop predictors for high-earning institutions:\n\nUGDS (student body size)\nRET_FT4 (first-year retention)\nTUITIONFEE_OUT and TUITIONFEE_IN\nPCTPELL (share of Pell recipients)\nRegional indicators (e.g., Southeast, Mid East)\n\nLow-impact features:\n\nMany fine-grained locale categories\nControl type contributes relatively little once other factors are included.\n\nTakeaway: Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting."
+  },
+  {
+    "objectID": "presentation.html#permutation-importance",
+    "href": "presentation.html#permutation-importance",
+    "title": "Predicting Post-Graduation Earnings",
+    "section": "Permutation Importance",
+    "text": "Permutation Importance\n\n\nTUITIONFEE_IN             0.0\nTUITIONFEE_OUT            0.0\nGRAD_DEBT_MDN             0.0\nRET_FT4                   0.0\nC100_4                    0.0\nPCTPELL                   0.0\nUGDS                      0.0\nREGION_Mid East           0.0\nREGION_Great Lakes        0.0\nREGION_Plains             0.0\nREGION_Southeast          0.0\nREGION_Southwest          0.0\nREGION_Rocky Mountains    0.0\nREGION_Far West           0.0\nREGION_Outlying Areas     0.0\ndtype: float64"
+  },
+  {
     "objectID": "presentation.html#logistic-regression-classification",
     "href": "presentation.html#logistic-regression-classification",
     "title": "Predicting Post-Graduation Earnings",
@@ -130,7 +123,7 @@
     "href": "presentation.html#logistic-regression-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Logistic Regression Results",
-    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.10 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
+    "text": "Logistic Regression Results\n\n\nk-Fold F1-Score: 0.80\nk-Fold CV took 0.08 seconds\n\nLogistic Regression Accuracy: 0.7728813559322034\nLogistic Regression Precision: 0.7775823831391786\nLogisitc Regression Recall: 0.7728813559322034\nLogistic Regression F-1 Score: 0.7719854657317307"
   },
   {
     "objectID": "presentation.html#random-forest-classification",
@@ -144,21 +137,7 @@
     "href": "presentation.html#random-forest-results",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Random Forest Results",
-    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.06 seconds\nRandom Forest Accuracy: 0.7694915254237288\nRandom Forest Precision: 0.7703288291806608\nRandom Forest Recall: 0.7694915254237288\nRandom Forest F-1 Score: 0.7693431112108853"
-  },
-  {
-    "objectID": "presentation.html#permutation-importance-random-forest",
-    "href": "presentation.html#permutation-importance-random-forest",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Permutation Importance (Random Forest)",
-    "text": "Permutation Importance (Random Forest)\n\nTop predictors for high-earning institutions:\n\nUGDS (student body size)\nRET_FT4 (first-year retention)\nTUITIONFEE_OUT and TUITIONFEE_IN\nPCTPELL (share of Pell recipients)\nRegional indicators (e.g., Southeast, Mid East)\n\nLow-impact features:\n\nMany fine-grained locale categories\nControl type contributes relatively little once other factors are included.\n\nTakeaway: Structural and academic characteristics (size, retention, completion) and student composition matter more than geographic setting."
-  },
-  {
-    "objectID": "presentation.html#permutation-importance",
-    "href": "presentation.html#permutation-importance",
-    "title": "Predicting Post-Graduation Earnings",
-    "section": "Permutation Importance",
-    "text": "Permutation Importance"
+    "text": "Random Forest Results\n\n\nRandom Forest Cross Validation\nk-Fold F1-Score: 0.81\nk-Fold CV took 1.11 seconds\nRandom Forest Accuracy: 0.7559322033898305\nRandom Forest Precision: 0.7571697903612158\nRandom Forest Recall: 0.7559322033898305\nRandom Forest F-1 Score: 0.7556795568392357"
   },
   {
     "objectID": "presentation.html#calibration-probabilities-vs.-accuracy",
@@ -186,14 +165,14 @@
     "href": "presentation.html#limitations-future-work",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Limitations & Future Work",
-    "text": "Limitations & Future Work\n\nData limitations:\n\nInstitution-level aggregates; no student-level or major-level detail.\nMissing data and reporting differences across institutions.\n\nNo causal claims:\n\nObservational, cross-sectional analysis; cannot separate institution effect from selection bias.\n\nFuture directions:\n\nIncorporate program/major mix and selectivity.\nExplore causal methods or matching designs.\nExamine changes over time (longitudinal trends)."
+    "text": "Limitations & Future Work\n\nData limitations:\n\nInstitution-level aggregates; no student-level or major-level detail.\nMissing data and reporting differences across institutions.\n\nNo causal claims:\n\nObservational, cross-sectional analysis; cannot separate institution effect from selection bias.\n\nFuture directions:\n\nIncorporate program and major details.\nExamine changes over time (longitudinal trends)."
   },
   {
     "objectID": "presentation.html#takeaways",
     "href": "presentation.html#takeaways",
     "title": "Predicting Post-Graduation Earnings",
     "section": "Takeaways",
-    "text": "Takeaways\n\nTuition alone is an incomplete indicator of value.\nAcademic success metrics (retention & completion) and student demographics are central to explaining earnings.\nMachine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers.\nFor policy, student advising, or institutional benchmarking, interpreting both cost and outcomes together is essential."
+    "text": "Takeaways\n\nTuition alone is an incomplete indicator of value.\nAcademic success metrics (retention & completion) and student demographics are central to explaining earnings.\nMachine-learning models provide modest gains in accuracy over linear models but highlight similar core drivers."
   },
   {
     "objectID": "index.html",
